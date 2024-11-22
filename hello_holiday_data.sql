@@ -237,3 +237,11 @@ VALUES
 ('Mia', 'Lopez', 'mia.lopez@example.com', '+393391234567', '1987-04-17'),
 ('William', 'Lee', 'william.lee@example.com', '+6512345678', '1996-10-02'),
 ('Charlotte', 'Clark', 'charlotte.clark@example.com', '+27123456789', '1994-07-22');
+
+INSERT into rating (hotel_id, customer_id, rating)
+VALUES
+(1, 1, '*****'),
+(2, 2, '*****'),
+(1, 3, '****'),
+(4, 4, '***'),
+(5, 5, '****');
