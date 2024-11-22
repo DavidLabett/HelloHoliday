@@ -20,7 +20,6 @@
 - **Show all branches:**  
   `git branch -a`
 
-
   ---
 
 ## 2. Working with Branches
@@ -121,3 +120,11 @@
 - **Checkout from all branches/reset**  
   `git checkout *`
   
+
+# Structure
+### Enums
+**Table:room -> Column:size**
+`'Single','Double','Triple','Quad'`
+
+**Table:rating -> Column:rating**
+`'*','**','***','****','*****'`
