@@ -473,3 +473,7 @@ fabric.properties
 
 # *.iml
 # modules.xml
+# file: ~/.gitignore_global
+.DS_Store
+.idea
+/.idea/
