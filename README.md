@@ -3,6 +3,7 @@
 ## Main structure
 - **Code/Console App in <ins>English</ins>**
 - **All branches in <ins>lowercase</ins>**
+- **All features and submenus needs its own branch**
 
 ## GIT
 
