@@ -1,10 +1,12 @@
 # HelloHoliday
 
-## Important Notice
+## GIT
+
+### Important Notice
 - **Make sure to commit a .gitignore file when creating your repo:**  
   `https://gist.github.com/drch-/00d98ab2b93b930f55e0f7c62abc4af2`
 
-## 1. Basic Commands
+### 1. Basic Commands
 - **Clone existing repo:**
   `git clone <repository_ssh>`
 
@@ -23,7 +25,7 @@
 
   ---
 
-## 2. Working with Branches
+### 2. Working with Branches
 - **Create a new branch:**  
   `git branch <branch_name>`
 
@@ -51,7 +53,7 @@
 
   ---
 
-  ## 3. Adding, Committing, and Pushing Changes
+### 3. Adding, Committing, and Pushing Changes
 - **Add changes to staging (specific file):**  
   `git add <file_name>`
 
@@ -76,7 +78,7 @@
 
   ---
 
-## 4. Merging Changes
+### 4. Merging Changes
 
 1. **Make sure both branches have a clean head:**
    `git status`
@@ -108,7 +110,7 @@
 
   ---
 
-## 4. Reset & undo
+### 5. Reset & undo
 - **If a file is unstaged -> Undo unstaged changes in file:**  
   `git checkout <file_name>`
 
