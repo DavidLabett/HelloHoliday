@@ -1,5 +1,9 @@
 # HelloHoliday
 
+## Main structure
+- **Code/Console App in <ins>English</ins>**
+- **All branches in <ins>lowercase</ins>**
+
 ## GIT
 
 ### Important Notice
