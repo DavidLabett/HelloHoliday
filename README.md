@@ -5,7 +5,7 @@
 - **All branches in <ins>lowercase</ins>**
 - **All features and submenus needs its own branch**
 - **Branch naming convention for menu (ex):**
-- **Menu: "feature/customer" | Submenu: "feature/customer/mybookings**
+- **Menu: "feature/menu/customer" | Submenu: "feature/menu/customer/mybookings**
 
 ## GIT
 
