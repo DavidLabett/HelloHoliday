@@ -4,7 +4,6 @@ public class BookingMenu
 {
     public void PrintBookingMenu()
     {
-        Console.WriteLine("HELLO");
         Console.WriteLine("+------Welcome---to---Booking-------+");
         Console.WriteLine("| When would you like to check in?");
         Console.WriteLine("| (Please use format 'YYYY-MM-DD')");
