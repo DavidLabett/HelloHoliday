@@ -46,3 +46,12 @@ VALUES
 SELECT b.id, b.customer_id from booking b
 where customer_id = 66;
 -- Booking ID: 66
+-- Insert booking to booking_x_rooms
+INSERT into booking_x_rooms (booking_id, room_id)
+VALUES
+(66, 1);
+
+-- ** Your room has been successfully booked from 2023-12-30 to 2024-01-05 ** --
+
+-- Modify booking, change extra bed to true
+UPDATE booking set extra_bed = true where customer_id = 66;
