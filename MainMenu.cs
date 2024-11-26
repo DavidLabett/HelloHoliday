@@ -3,13 +3,13 @@ namespace HelloHoliday;
 public class MainMenu
 {
     //Query _query;
-    //CustomerMenu _customerMenu = new();
+    CustomerMenu _customerMenu;
     //BookingMenu _bookingMenu = new();
     
     public MainMenu(Query query)
     {
         //_query = query;
-        //_customerMenu = new(query);
+        _customerMenu = new(query, this);
         //_bookingMenu = new(query);
     }
 
@@ -42,7 +42,7 @@ public class MainMenu
                 case ("customer"):
                 case ("c"):
                     Console.WriteLine("Customer Menu");
-                    //_customerMenu.Memu();
+                    _customerMenu.Menu();
                     break;
                 case ("2"):
                 case ("booking"):
