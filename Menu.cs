@@ -19,7 +19,6 @@ public class Menu
     }
     private void PrintMenu()
     {
-        /*
         // skriver ut menyn i konsolen
         Console.WriteLine("Choose option");
         Console.WriteLine("1. List all");
@@ -30,8 +29,6 @@ public class Menu
         Console.WriteLine("9. Quit");
         // lyssnar på användaren
         AskUser();
-        */
-        _bookingMenu.PrintBookingMenu();
     }
     private async void AskUser()
     {
