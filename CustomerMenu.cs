@@ -15,7 +15,8 @@ public class CustomerMenu
     {
         Console.WriteLine("What's your Email?");
         var email = Console.ReadLine();
-        if (_query.ValidateEmail(email))
+        if (_query.ValidateEmail(email).Result)
+        //_query.ValidateEmail(email);
         {
             bool running = true;
             while (running)
@@ -24,11 +25,11 @@ public class CustomerMenu
                 running = AskUser(email);
             }
         }
+       
         else
         {
             RegisterCustomer(email);
         }
-
         _mainMenu.Menu();
     }
 

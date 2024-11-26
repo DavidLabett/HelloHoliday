@@ -8,7 +8,7 @@ public class Database
         private readonly string _port = "5437";
         private readonly string _username = "postgres";
         private readonly string _password = "GreedyMotherGrows";
-        private readonly string _database = "database_for_menu";
+        private readonly string _database = "hello_holiday";
 
         private NpgsqlDataSource _connection;
 
