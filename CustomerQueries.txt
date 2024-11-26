@@ -31,13 +31,14 @@ JOIN booking_x_rooms bxr on b.id = bxr.booking_id
 where room_id = 1;
 
 -- Your chosen room is available from 2023-12-05 to 2023-12-26 and from 2023-12-30.
--- When do you arrive? -2023-12-30.
+-- When do you arrive? 2023-12-30.
 -- How long would you like to stay? 6 days.
 -- Will you need an extra bed?. No.
 -- Do you want breakfast included? Yes.
 -- Create new booking.
-INSERT into booking (customer_id, start_date, end_date, extra_bed, breakfast) VALUES
-('66', '2023-12-30', '2024-01-05', false, true);
+INSERT into booking (customer_id, start_date, end_date, extra_bed, breakfast)
+VALUES
+('66', '2023-12-30', '2024-01-04', false, true);
 
 -- Check booking ID
 SELECT b.id, b.customer_id from booking b
