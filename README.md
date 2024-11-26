@@ -49,6 +49,9 @@
   `git branch -d <branch_name>`  
   *(Use `-D` to force delete without checking if it's merged, and discarding changes)*
 
+- **Rename a branch while pointed to any branch:**
+  `git branch -m <oldname> <newname>`
+
 - **Change working branch**  
   `git checkout <branch_name>`
 
