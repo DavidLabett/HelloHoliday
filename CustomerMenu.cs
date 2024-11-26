@@ -4,6 +4,7 @@ public class CustomerMenu
 {
     Query _query;
     MainMenu _mainMenu;
+
     public CustomerMenu(Query query, MainMenu mainMenu)
     {
         _query = query;
@@ -17,9 +18,9 @@ public class CustomerMenu
         if (_query.ValidateEmail(email))
         {
             bool running = true;
-            while (running) 
+            while (running)
             {
-                PrintMenu();
+                PrintCustomerMenu();
                 running = AskUser(email);
             }
         }
@@ -28,11 +29,10 @@ public class CustomerMenu
             RegisterCustomer(email);
         }
 
-        
         _mainMenu.Menu();
     }
 
-    private void PrintMenu()
+    private void PrintCustomerMenu()
     {
         Console.WriteLine("Choose option");
         Console.WriteLine("2. Modify");
@@ -52,14 +52,13 @@ public class CustomerMenu
                     ModifyCustomer(email);
                     break;
                 case "3":
-                    DeleteCustomer();
+                    DeleteCustomer(email);
                     break;
                 case "4":
-                    MyBookings();
+                    MyBookings(email);
                     break;
                 case "0":
                     return false;
-                    break;
             }
         }
 
@@ -83,10 +82,8 @@ public class CustomerMenu
         _query.ModifyCustomer(email);
     }
 
-    private void DeleteCustomer()
+    private void DeleteCustomer(String email)
     {
-        Console.WriteLine("Enter email");
-        var email = Console.ReadLine();
         if (_query.DeleteCustomer(email))
         {
             Console.WriteLine("Your account has successfully been deleted");
@@ -97,13 +94,8 @@ public class CustomerMenu
         }
     }
 
-    private void MyBookings()
+    private void MyBookings(String email)
     {
-        Console.WriteLine("Enter Email");
-        var email = Console.ReadLine();
-        if (email is not null)
-        {
-            
-        }
+      
     }
 }
