@@ -1,0 +1,57 @@
+-- Check if already customer
+SELECT email from customer where email = 'fadingcrap@gmail.com';
+-- no customer with email found
+
+-- Register as customer
+INSERT into customer (firstname, lastname, email, phone, birth)
+VALUES
+('Robert', 'Ploski', 'fadingcrap@gmail.com','0736000302', '1990-08-24');
+
+-- Modify info, changed new phone number to 0735502399 where phone number was 0736000302
+UPDATE customer set phone = '0735502399' where phone = '0736000302';
+
+-- Check customer id
+SELECT id from customer where email = 'fadingcrap@gmail.com';
+-- id = 66
+
+-- Check my bookings
+SELECT customer_id from booking where id = 66;
+-- no booking found
+
+-- Create new booking in after these steps. Witch country/hotel would you like to stay in?
+SELECT h.name, h.address, country.name, city.name, h.description, h.pool, h.entertainment, h.restaurant, h.kidsclub, h.beach_proximity, h.city_proximity from hotel h
+JOIN country on h.country_id = country.id
+JOIN city on h.city_id = city.id;
+-- t ex. Ocean Breeze Resort, Miami, Usa id = 1
+
+SELECT * from room where hotel_id = 1;
+-- I choose room_id 1. Cozy single room with an ocean view.
+
+-- Check availability
+SELECT b.start_date, b.end_date, bxr.room_id from booking b
+JOIN booking_x_rooms bxr on b.id = bxr.booking_id
+where room_id = 1;
+
+-- Your chosen room is available from 2023-12-05 to 2023-12-26 and from 2023-12-30.
+-- When do you arrive? 2023-12-30.
+-- How long would you like to stay? 6 days.
+-- Will you need an extra bed?. No.
+-- Do you want breakfast included? Yes.
+-- Create new booking.
+INSERT into booking (customer_id, start_date, end_date, extra_bed, breakfast)
+VALUES
+('66', '2023-12-30', '2024-01-05', false, true);
+
+-- Check booking ID
+SELECT b.id, b.customer_id from booking b
+where customer_id = 66;
+-- Booking ID: 66
+-- Insert booking to booking_x_rooms
+INSERT into booking_x_rooms (booking_id, room_id)
+VALUES
+(66, 1);
+
+-- ** Your room has been successfully booked from 2023-12-30 to 2024-01-05 ** --
+
+-- Modify booking, change extra bed to true
+UPDATE booking set extra_bed = true where customer_id = 66;
