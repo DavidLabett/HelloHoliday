@@ -2,16 +2,24 @@ namespace HelloHoliday;
 
 public class Menu
 {
+    BookingMenu _bookingMenu;
     Query _query;
     public Menu(Query query)
     {
         // constructorn tar emot actions 
         _query = query;
+        _bookingMenu = new BookingMenu(); //Initialize
         // och startar menyn
         PrintMenu();
     }
+        //Booking menu constructor
+    public Menu(BookingMenu bookingMenu)
+    {
+        _bookingMenu = bookingMenu;
+    }
     private void PrintMenu()
     {
+        /*
         // skriver ut menyn i konsolen
         Console.WriteLine("Choose option");
         Console.WriteLine("1. List all");
@@ -22,6 +30,8 @@ public class Menu
         Console.WriteLine("9. Quit");
         // lyssnar på användaren
         AskUser();
+        */
+        _bookingMenu.PrintBookingMenu();
     }
     private async void AskUser()
     {
