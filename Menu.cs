@@ -1,86 +1,63 @@
 namespace HelloHoliday;
 
-public class Menu
+public class MainMenu
 {
-    Query _query;
-    public Menu(Query query)
+    //Query _query;
+    //CustomerMenu _customerMenu = new();
+    //BookingMenu _bookingMenu = new();
+    
+    public MainMenu(Query query)
     {
-        // constructorn tar emot actions 
-        _query = query;
-        // och startar menyn
-        PrintMenu();
+        //_query = query;
+        //_customerMenu = new(query);
+        //_bookingMenu = new(query);
     }
+
+    public void Menu()
+    {
+        bool running = true;
+        while (running)
+        {
+            PrintMenu();
+            running = AskUser();
+        }
+    }
+    
     private void PrintMenu()
     {
-        // skriver ut menyn i konsolen
         Console.WriteLine("Choose option");
-        Console.WriteLine("1. List all");
-        Console.WriteLine("2. Show one");
-        Console.WriteLine("3. Add one");
-        Console.WriteLine("4. Update one");
-        Console.WriteLine("5. Delete one");
+        Console.WriteLine("1. Customer");
+        Console.WriteLine("2. Booking");
         Console.WriteLine("9. Quit");
-        // lyssnar på användaren
-        AskUser();
     }
-    private async void AskUser()
+    
+    private bool AskUser()
     {
-        // tar emot vad användaren skriver
         var response = Console.ReadLine();
         if (response is not null)
         {
-            string? id; // define for multiple use below
-            
-            // kör olika actions beroende på vad användaren skrivit
             switch (response)
             {
-                case("1"):
-                    Console.WriteLine("Listing all");
-                    _query.ListAll();
+                case ("1"):
+                case ("customer"):
+                case ("c"):
+                    Console.WriteLine("Customer Menu");
+                    //_customerMenu.Memu();
                     break;
-                case("2"):
-                    Console.WriteLine("Enter id to show details about one");
-                    id = Console.ReadLine();
-                    if (id is not null)
-                    { 
-                        _query.ShowOne(id);
-                    }
+                case ("2"):
+                case ("booking"):
+                case ("b"):
+                    Console.WriteLine("Bookings Menu");
+                    //_bookingMenu.Menu();
                     break;
-                case("3"):
-                    Console.WriteLine("Enter name (required)");
-                    var name = Console.ReadLine(); // required
-                    Console.WriteLine("Enter slogan");
-                    var slogan = Console.ReadLine(); // not required
-                    if (name is not null)
-                    {
-                        _query.AddOne(name, slogan);
-                    }
-                    break;
-                case("4"):
-                    Console.WriteLine("Enter id to update one");
-                    id = Console.ReadLine();
-                    if (id is not null)
-                    { 
-                        _query.UpdateOne(id);
-                    }
-                    break;
-                case("5"):
-                    Console.WriteLine("Enter id to delete one");
-                    id = Console.ReadLine();
-                    if (id is not null)
-                    { 
-                        _query.DeleteOne(id);
-                    }
-                    break;
-                case("9"):
+                case ("9"):
+                case ("quit"):
+                case ("q"):
                     Console.WriteLine("Quitting");
-                    Environment.Exit(0);
-                    break;
+                    return false;
             }
-
-            PrintMenu();
         }
-        
+
+        return true;
     }
-    
 }
