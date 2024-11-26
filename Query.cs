@@ -80,4 +80,24 @@ public class Query
         }
     }
     
+    // Customer menu metoder
+    public bool ValidateEmail(String email)
+    {
+        return true;
+    }
+
+    public void RegisterCustomer(String firstName, String lastName, String email, String phone)
+    {
+        
+    }
+
+    public void ModifyCustomer(String email)
+    {
+        
+    }
+
+    public bool DeleteCustomer(String email)
+    {
+        return true;
+    }
 }

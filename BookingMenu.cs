@@ -2,7 +2,7 @@ namespace HelloHoliday;
 
 public class BookingMenu
 {
-    public void PrintBookingMenu()
+    public void Menu()
     {
         Console.WriteLine("+------Welcome---to---Booking-------+");
         Console.WriteLine("| When would you like to check in?");
