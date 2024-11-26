@@ -3,35 +3,53 @@ namespace HelloHoliday;
 public class CustomerMenu
 {
     Query _query;
-    public CustomerMenu(Query query)
+    MainMenu _mainMenu;
+    public CustomerMenu(Query query, MainMenu mainMenu)
     {
         _query = query;
-        PrintMenu();
+        _mainMenu = mainMenu;
+    }
+
+    public void Menu()
+    {
+        Console.WriteLine("What's your Email?");
+        var email = Console.ReadLine();
+        if (_query.ValidateEmail(email))
+        {
+            bool running = true;
+            while (running) 
+            {
+                PrintMenu();
+                running = AskUser(email);
+            }
+        }
+        else
+        {
+            RegisterCustomer(email);
+        }
+
+        
+        _mainMenu.Menu();
     }
 
     private void PrintMenu()
     {
         Console.WriteLine("Choose option");
-        Console.WriteLine("1. Register");
         Console.WriteLine("2. Modify");
         Console.WriteLine("3. Delete");
         Console.WriteLine("4. My Bookings");
         Console.WriteLine("0. Return to Main Menu");
-        AskUser();
     }
 
-    private void AskUser()
+    private bool AskUser(String email)
     {
         var response = Console.ReadLine();
         if (response is not null)
         {
             switch (response)
             {
-                case "1":
-                    RegisterCustomer();
-                    break;
                 case "2":
-                    ModifyCustomer();
+                    ModifyCustomer(email);
                     break;
                 case "3":
                     DeleteCustomer();
@@ -40,29 +58,28 @@ public class CustomerMenu
                     MyBookings();
                     break;
                 case "0":
+                    return false;
                     break;
             }
         }
+
+        return true;
     }
 
-    private void RegisterCustomer()
+    private void RegisterCustomer(String email)
     {
         Console.Clear();
         Console.WriteLine("First name");
         var firstName = Console.ReadLine();
         Console.WriteLine("Last name");
         var lastName = Console.ReadLine();
-        Console.WriteLine("Email");
-        var email = Console.ReadLine();
         Console.WriteLine("Phone number");
         var phone = Console.ReadLine();
         _query.RegisterCustomer(firstName, lastName, email, phone);
     }
 
-    private void ModifyCustomer()
+    private void ModifyCustomer(String email)
     {
-        Console.WriteLine("Enter email");
-        var email = Console.ReadLine();
         _query.ModifyCustomer(email);
     }
 
@@ -82,6 +99,11 @@ public class CustomerMenu
 
     private void MyBookings()
     {
-        
+        Console.WriteLine("Enter Email");
+        var email = Console.ReadLine();
+        if (email is not null)
+        {
+            
+        }
     }
 }
