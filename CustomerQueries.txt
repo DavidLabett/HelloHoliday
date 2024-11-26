@@ -53,3 +53,8 @@ VALUES
 
 -- Modify booking, change extra bed to true
 UPDATE booking set extra_bed = true where customer_id = 66;
+
+-- Cancel holiday, Remove booking, customer, booking_x_rooms (DELETE)
+DELETE from booking_x_rooms where booking_id = 66;
+DELETE from booking where id = 66;
+DELETE from customer where id = 66;
