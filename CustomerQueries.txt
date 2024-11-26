@@ -40,7 +40,7 @@ where room_id = 1;
 -- Create new booking.
 INSERT into booking (customer_id, start_date, end_date, extra_bed, breakfast)
 VALUES
-('66', '2023-12-30', '2024-01-05', false, true);
+('66', '2023-12-30', '2024-01-04', false, true);
 
 -- Check booking ID
 SELECT b.id, b.customer_id from booking b
