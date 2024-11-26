@@ -1,6 +1,5 @@
 --1. When would you like to check in/check out?
 
-
 SELECT
     r.id AS room_id,
     r.hotel_id,
