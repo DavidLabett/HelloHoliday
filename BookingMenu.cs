@@ -47,7 +47,8 @@ public class BookingMenu
         Console.WriteLine("| Great reviews or great price?");
         Console.Write("> ");
         string? reviewOrPrice = Console.ReadLine()?.ToLower();
-
+        
+        //add check that inputs are not null
         return new BookingPreferences
         {
             CheckInDate = checkIn,
