@@ -11,17 +11,20 @@ public class CustomerMenu
         _mainMenu = mainMenu;
     }
 
-    public async Task Menu()
+    public async void Menu()
     {
         Console.WriteLine("What's your Email?");
         var email = Console.ReadLine();
-        if (await _query.ValidateEmail(email))
-        {
-            Console.WriteLine("Email is valid.");
-        }
-        else
-        {
-            Console.WriteLine("Email not found.");
+        if(email is not null){ //handles email input
+            var isValid = await _query.ValidateEmail(email);
+            if(isValid)
+            {
+                Console.WriteLine("Email is valid.");
+            }
+            else
+            {
+                Console.WriteLine("Email not found.");
+            }
         }
         /*
          if (await _query.ValidateEmail(email))
@@ -87,7 +90,9 @@ public class CustomerMenu
         var lastName = Console.ReadLine();
         Console.WriteLine("Phone number");
         var phone = Console.ReadLine();
-        _query.RegisterCustomer(firstName, lastName, email, phone);
+       if(firstName is not null && lastName is not null && phone is not null){
+           _query.RegisterCustomer(firstName, lastName, email, phone);
+       }
     }
 
     private void ModifyCustomer(String email)

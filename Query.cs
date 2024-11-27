@@ -85,21 +85,25 @@ public class Query
     {
        await using (var cmd = _db.CreateCommand("SELECT * FROM customer WHERE email = $1"))
         {
-            cmd.Parameters.AddWithValue("$1", email);
+            cmd.Parameters.AddWithValue(email);
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
                 while (await reader.ReadAsync())
                 {
-                    string dbEmail = reader.GetString(0);
+                    Console.WriteLine("In the loop");
+                    string dbEmail = reader.GetString(3);
                     //Console.WriteLine($"dbEmail: {reader.GetString(0)} \t email: {email}");
-                    if (email.Equals(dbEmail))
+                    if (email == dbEmail)
                     {
                         Console.WriteLine("Welcome!");
                         return true;
                     }
+                    else
+                    {
+                        Console.WriteLine("Invalid email");
+                        return false;
+                    }
                 }
-
-                Console.WriteLine("Invalid email");
                 return false;
             }
         }
