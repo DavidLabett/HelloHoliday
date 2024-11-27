@@ -1,14 +1,40 @@
 # HelloHoliday
 
-## Main structure
-- **Code/Console App in <ins>English</ins>**
-- **All branches in <ins>lowercase</ins>**
-- **All features and submenus needs its own branch**
-- **Branch naming convention for menu (ex):**
-- **Menu: "feature/menu/customer" | Submenu: "feature/menu/customer/mybookings**
-- **Menu: Class-names: BookingMenu, CustomerMenu etc**
+## Rules
+- **We use English in all our files, code and comments**
+- **We do our best to use the standard naming conventions in our code**
+- **We name things in a way so that we can read what it is**
 
-## GIT
+## Git Rules
+- **We make sure that the main branch is clean and up to date with working code**
+- **We work from dev as a safety measure**
+- **We use lowercase when we create a new branch**
+- **We recommend using tab to autocomplete branch-names when moving between them (`git checkout <branch-name>`) or doing a merge (`git merge <branch-name>`) to ensure that we spell them correctly**
+- **We create branches for features and submenus**
+- **We do not continue in a feature branch that has completed its purpose**
+- **All feature branches start with `feature/<name>`**
+- **If we are working together on a branch we communicate when we push changes to that branch**
+- **All merges need to be communicated to the team so that no changes to the shared branches happen without prior knowledge (main-branch and dev-branch)**
+- **We always merge first with our feature branch and handle all potential conflicts in our feature branch (or if we want to merge dev with main, we first merge main to dev)**
+- **We only merge with dev when all conflicts are resolved**
+- **We only merge with main when all conflicts are resolved, and we have tested and working code**
+
+## Menu Rules
+- **When creating a feature branch for a menu we write `feature/menu/<name>` (ex. `feature/menu/customer`)**
+- **When we create a feature branch for a submenu we write `feature/menu/<name>/<subname>` (ex. `feature/menu/customer/mybookings`)**
+- **Class names should be named so the first word is the type of menu, and the second word is “menu” (ex. `BookingMenu` or `CustomerMenu`)**
+
+
+# Structure
+### Enums
+**Table:room -> Column:size**
+`'Single','Double','Triple','Quad'`
+
+**Table:rating -> Column:rating**
+`'*','**','***','****','*****'`
+
+
+# HOW TO USE GIT
 
 ### Important Notice
 - **Make sure to commit a .gitignore file when creating your repo:**  
@@ -48,9 +74,6 @@
 - **Delete a branch (local):**  
   `git branch -d <branch_name>`  
   *(Use `-D` to force delete without checking if it's merged, and discarding changes)*
-
-- **Rename a branch while pointed to any branch:**
-  `git branch -m <oldname> <newname>`
 
 - **Change working branch**  
   `git checkout <branch_name>`
@@ -134,10 +157,3 @@
   `git checkout *`
   
 
-# Structure
-### Enums
-**Table:room -> Column:size**
-`'Single','Double','Triple','Quad'`
-
-**Table:rating -> Column:rating**
-`'*','**','***','****','*****'`
