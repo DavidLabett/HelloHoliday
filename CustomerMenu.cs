@@ -20,32 +20,14 @@ public class CustomerMenu
             if(isValid)
             {
                 Console.WriteLine("Email is valid.");
+                PrintCustomerMenu();
             }
             else
             {
                 Console.WriteLine("Email not found.");
+                RegisterCustomer(email);
             }
         }
-        /*
-         if (await _query.ValidateEmail(email))
-         //_query.ValidateEmail(email);
-         {
-             bool running = true;
-             while (running)
-             {
-                 PrintCustomerMenu();
-                 running = AskUser(email);
-             }
-         }
-
-         else
-         {
-             RegisterCustomer(email);
-         }
-         _mainMenu.Menu();
-     }
- */
-       
     }
 
     private void PrintCustomerMenu()

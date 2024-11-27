@@ -1,4 +1,5 @@
 using Npgsql;
+
 namespace HelloHoliday;
 
 public class Query
