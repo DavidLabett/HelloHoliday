@@ -20,7 +20,7 @@ public class MainMenu
         while (running)
         {
             PrintMenu();
-            running = AskUser();
+            running = AskUser().Result;
         }
     }
     
@@ -32,7 +32,7 @@ public class MainMenu
         Console.WriteLine("9. Quit");
     }
     
-    private bool AskUser()
+    private async Task<bool> AskUser()
     {
         var response = Console.ReadLine();
         if (response is not null)
@@ -43,7 +43,7 @@ public class MainMenu
                 case ("customer"):
                 case ("c"):
                     Console.WriteLine("Customer Menu");
-                  _customerMenu.Menu();
+                 await  _customerMenu.Menu();
                     break;
                 case ("2"):
                 case ("booking"):

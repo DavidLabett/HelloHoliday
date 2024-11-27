@@ -91,7 +91,6 @@ public class Query
             {
                 while (await reader.ReadAsync())
                 {
-                    Console.WriteLine("In the loop");
                     string dbEmail = reader.GetString(3);
                     //Console.WriteLine($"dbEmail: {reader.GetString(0)} \t email: {email}");
                     if (email == dbEmail)

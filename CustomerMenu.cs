@@ -11,7 +11,7 @@ public class CustomerMenu
         _mainMenu = mainMenu;
     }
 
-    public async void Menu()
+    public async Task Menu()
     {
         Console.WriteLine("What's your Email?");
         var email = Console.ReadLine();
@@ -20,11 +20,18 @@ public class CustomerMenu
             if(isValid)
             {
                 Console.WriteLine("Email is valid.");
-                PrintCustomerMenu();
+                bool running = true;
+                while (running)
+                {
+                    PrintCustomerMenu();
+                    running = AskUser(email);
+                }
+                
             }
             else
             {
                 Console.WriteLine("Email not found.");
+                Console.WriteLine("Let's get you registered!");
                 RegisterCustomer(email);
             }
         }
@@ -65,7 +72,8 @@ public class CustomerMenu
 
     private void RegisterCustomer(String email)
     {
-        Console.Clear();
+        //Console.Clear();
+        Console.WriteLine("Please fill in your:");
         Console.WriteLine("First name");
         var firstName = Console.ReadLine();
         Console.WriteLine("Last name");
