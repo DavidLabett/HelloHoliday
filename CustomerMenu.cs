@@ -11,26 +11,38 @@ public class CustomerMenu
         _mainMenu = mainMenu;
     }
 
-    public void Menu()
+    public async Task Menu()
     {
         Console.WriteLine("What's your Email?");
         var email = Console.ReadLine();
-        if (_query.ValidateEmail(email).Result)
-        //_query.ValidateEmail(email);
+        if (await _query.ValidateEmail(email))
         {
-            bool running = true;
-            while (running)
-            {
-                PrintCustomerMenu();
-                running = AskUser(email);
-            }
+            Console.WriteLine("Email is valid.");
         }
-       
         else
         {
-            RegisterCustomer(email);
+            Console.WriteLine("Email not found.");
         }
-        _mainMenu.Menu();
+        /*
+         if (await _query.ValidateEmail(email))
+         //_query.ValidateEmail(email);
+         {
+             bool running = true;
+             while (running)
+             {
+                 PrintCustomerMenu();
+                 running = AskUser(email);
+             }
+         }
+
+         else
+         {
+             RegisterCustomer(email);
+         }
+         _mainMenu.Menu();
+     }
+ */
+       
     }
 
     private void PrintCustomerMenu()

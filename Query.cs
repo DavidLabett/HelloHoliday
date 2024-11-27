@@ -91,12 +91,15 @@ public class Query
                 while (await reader.ReadAsync())
                 {
                     string dbEmail = reader.GetString(0);
-                    if (email == dbEmail)
+                    //Console.WriteLine($"dbEmail: {reader.GetString(0)} \t email: {email}");
+                    if (email.Equals(dbEmail))
                     {
-                        Console.WriteLine("Test");
+                        Console.WriteLine("Welcome!");
                         return true;
                     }
                 }
+
+                Console.WriteLine("Invalid email");
                 return false;
             }
         }

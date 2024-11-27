@@ -43,7 +43,7 @@ public class MainMenu
                 case ("customer"):
                 case ("c"):
                     Console.WriteLine("Customer Menu");
-                    _customerMenu.Menu();
+                  _customerMenu.Menu();
                     break;
                 case ("2"):
                 case ("booking"):
