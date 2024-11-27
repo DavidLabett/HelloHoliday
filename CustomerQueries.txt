@@ -16,12 +16,13 @@ SELECT id from customer where email = 'fadingcrap@gmail.com';
 SELECT customer_id from booking where id = 66;
 -- no booking found
 
--- Create new booking after these steps. Witch country/hotel would you like to stay in?
+-- Select hotel.
 SELECT h.name, h.address, country.name, city.name, h.description, h.pool, h.entertainment, h.restaurant, h.kidsclub, h.beach_proximity, h.city_proximity from hotel h
 JOIN country on h.country_id = country.id
 JOIN city on h.city_id = city.id;
 -- t ex. Ocean Breeze Resort, Miami, Usa id = 1
 
+-- Select room.
 SELECT * from room where hotel_id = 1;
 -- I choose room_id 1. Cozy single room with an ocean view.
 
