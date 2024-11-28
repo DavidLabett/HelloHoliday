@@ -100,4 +100,15 @@ public class Query
     {
         return true;
     }
+    
+    
+    
+    //BookingQueriescs
+    
+    
+    
+    
 }
+
+
+

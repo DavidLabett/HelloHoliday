@@ -11,8 +11,10 @@ public class BookingsQueriescs
             _db = db;
         }
 
+       
+        
         // Method to fetch available rooms for specific dates (check-in and check-out)
-        public async void FetchAvailableRooms(DateTime checkIn, DateTime checkOut)
+        public async Task FetchAvailableRooms(DateTime checkIn, DateTime checkOut)
         {
             const string query = @"
                 SELECT
