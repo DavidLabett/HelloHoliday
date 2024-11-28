@@ -88,7 +88,6 @@ public class CustomerMenu
        if(firstName is not null && lastName is not null && phone is not null){
            _query.RegisterCustomer(firstName, lastName, email, phone, birthdate);
        }
-       PrintCustomerMenu();
     }
 
     private void ModifyCustomer(String email)
