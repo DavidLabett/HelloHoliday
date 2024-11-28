@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices.JavaScript;
+
 namespace HelloHoliday;
 
 public class CustomerMenu
@@ -80,9 +82,13 @@ public class CustomerMenu
         var lastName = Console.ReadLine();
         Console.WriteLine("Phone number");
         var phone = Console.ReadLine();
+        Console.WriteLine("Date of birth");
+        var birth = Console.ReadLine();
+        var birthdate = DateTime.Parse(birth);
        if(firstName is not null && lastName is not null && phone is not null){
-           _query.RegisterCustomer(firstName, lastName, email, phone);
+           _query.RegisterCustomer(firstName, lastName, email, phone, birthdate);
        }
+       PrintCustomerMenu();
     }
 
     private void ModifyCustomer(String email)

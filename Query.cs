@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.JavaScript;
 using Npgsql;
 
 namespace HelloHoliday;
@@ -109,9 +110,17 @@ public class Query
         }
     }
 
-    public void RegisterCustomer(String firstName, String lastName, String email, String phone)
+    public async void RegisterCustomer(String firstName, String lastName, String email, String phone, DateTime birth)
     {
-        
+        await using (var cmd = _db.CreateCommand("INSERT INTO customer (firstname, lastname, email, phone, birth) VALUES ($1, $2, $3, $4, $5)"))
+        {
+            cmd.Parameters.AddWithValue(firstName);
+            cmd.Parameters.AddWithValue(lastName);
+            cmd.Parameters.AddWithValue(email);
+            cmd.Parameters.AddWithValue(phone);
+            cmd.Parameters.AddWithValue(birth);
+            await cmd.ExecuteNonQueryAsync();
+        }
     }
 
     public void ModifyCustomer(String email)
