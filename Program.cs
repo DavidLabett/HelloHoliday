@@ -17,6 +17,7 @@ class Program
         
             Console.WriteLine("Select an option to test:");
             Console.WriteLine("1. Fetch Available Rooms");
+            Console.WriteLine("2.show_master");
             Console.WriteLine("0. Exit");
 
             var response = Console.ReadLine();
@@ -30,6 +31,9 @@ class Program
                     var checkOut = Console.ReadLine();
                     var parsedCheckOut = DateTime.Parse(checkOut);
                     await bookingQueries.FetchAvailableRooms(parsedCheckIn, parsedCheckOut);
+                    break;
+                case "2":
+                    await bookingQueries.ListAll();
                     break;
                 case "0":
                     Console.WriteLine("Exit");

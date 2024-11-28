@@ -2,9 +2,9 @@ namespace HelloHoliday;
 
 public class BookingPreferences
 {
-    public string CheckInDate;
-    public string CheckOutDate;
-    public string RoomSize;
+    public string CheckInDate; //
+    public string CheckOutDate; //
+    public string RoomSize; //
     public string Pool;
     public string Entertainment;
     public string KidsClub;

@@ -14,6 +14,24 @@ public class BookingsQueriescs
        
         
         // Method to fetch available rooms for specific dates (check-in and check-out)
+        
+        public async Task ListAll()
+        {
+            await using (var cmd = _db.CreateCommand("SELECT * FROM booking_master"))
+            await using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    Console.WriteLine($"id: {reader.GetInt32(0)} \t hotel_id: {reader.GetInt32(1)}");
+                }
+            }
+        }
+        
+        
+        
+        
+        
+        
         public async Task FetchAvailableRooms(DateTime checkIn, DateTime checkOut)
         {
             const string query = @"
