@@ -101,6 +101,93 @@ public class BookingsQueriescs
                 }
             }
         }
+        
+        //Method to fetch hotels with pool
+        public async void FetchHotelsWithPool(int hotelId)
+        {
+            const string query = @"
+        SELECT
+            h.name AS hotel_name,
+            h.address AS hotel_address,
+            h.pool AS has_pool
+        FROM
+            Hotel h
+        WHERE
+            h.id = $1;";
+
+            await ExecuteAmenityQuery(hotelId, query, "Pool");
+        }
+
+        
+        //Method to fetch rooms with entertainment
+        public async void FetchHotelsWithEntertainment(int hotelId)
+        {
+            const string query = @"
+        SELECT
+            h.name AS hotel_name,
+            h.address AS hotel_address,
+            h.entertainment AS has_entertainment
+        FROM
+            Hotel h
+        WHERE
+            h.id = $1;";
+
+            await ExecuteAmenityQuery(hotelId, query, "Entertainment");
+        }
+        
+        //Method to fetch rooms with Kidsclub
+        public async void FetchHotelsWithKidsclub(int hotelId)
+        {
+            const string query = @"
+        SELECT
+            h.name AS hotel_name,
+            h.address AS hotel_address,
+            h.entertainment AS has_kidsclub
+        FROM
+            Hotel h
+        WHERE
+            h.id = $1;";
+
+            await ExecuteAmenityQuery(hotelId, query, "Kidsclub");
+        }
+
+        
+        //Method to fetch rooms with Restaurant
+        public async void FetchHotelsWithRestaurant(int hotelId)
+        {
+            const string query = @"
+        SELECT
+            h.name AS hotel_name,
+            h.address AS hotel_address,
+            h.restaurant AS has_restaurant
+        FROM
+            Hotel h
+        WHERE
+            h.id = $1;";
+
+            await ExecuteAmenityQuery(hotelId, query, "Restaurant");
+        }
+
+        private async Task ExecuteAmenityQuery(int hotelId, string query, string amenity)
+        {
+            await using (var cmd = _db.CreateCommand(query))
+            {
+                cmd.Parameters.AddWithValue(hotelId); // $1
+                await using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        Console.WriteLine($"Hotel: {reader.GetString(0)}, Address: {reader.GetString(1)}, {amenity}: {reader.GetBoolean(2)}");
+                    }
+                }
+            }
+        }
+/* You can call these methods individually based on the amenity you're looking for, example use:
+ var query = new Query(db);
+    query.FetchHotelsWithPool(hotelId);
+    query.FetchHotelsWithEntertainment(hotelId);
+    query.FetchHotelsWithGym(hotelId);*/
+
 
         // Method to fetch hotels by amenities (e.g., Pool, Entertainment, etc.)
         public async void FetchHotelsByAmenity(string amenity, int hotelId)
