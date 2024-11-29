@@ -6,7 +6,7 @@ public class MainMenu
     BookingMenu _bookingMenu;
     CustomerMenu _customerMenu;
     //BookingMenu _bookingMenu = new();
-    
+
     public MainMenu(Query query)
     {
         //_query = query;
@@ -23,7 +23,7 @@ public class MainMenu
             running = AskUser().Result;
         }
     }
-    
+
     private void PrintMenu()
     {
         Console.WriteLine("Choose option");
@@ -31,7 +31,7 @@ public class MainMenu
         Console.WriteLine("2. Booking");
         Console.WriteLine("9. Quit");
     }
-    
+
     private async Task<bool> AskUser()
     {
         var response = Console.ReadLine();
@@ -43,7 +43,7 @@ public class MainMenu
                 case ("customer"):
                 case ("c"):
                     Console.WriteLine("Customer Menu");
-                 await  _customerMenu.Menu();
+                    await _customerMenu.Menu();
                     break;
                 case ("2"):
                 case ("booking"):

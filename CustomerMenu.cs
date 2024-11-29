@@ -17,18 +17,15 @@ public class CustomerMenu
     {
         Console.WriteLine("What's your Email?");
         var email = Console.ReadLine();
-        if(email is not null){ //handles email input
+        if (email is not null)
+        {
+            //handles email input
             var isValid = await _query.ValidateEmail(email);
-            if(isValid)
+            if (isValid)
             {
                 Console.WriteLine("Email is valid.");
-                bool running = true;
-                while (running)
-                {
-                    PrintCustomerMenu();
-                    running = AskUser(email);
-                }
-                
+                PrintCustomerMenu();
+                AskUser(email);
             }
             else
             {
@@ -83,17 +80,30 @@ public class CustomerMenu
         Console.WriteLine("Phone number");
         var phone = Console.ReadLine();
         Console.WriteLine("Date of birth");
-        var birth = Console.ReadLine();
-        var birthdate = DateTime.Parse(birth);
-       if(firstName is not null && lastName is not null && phone is not null){
-           _query.RegisterCustomer(firstName, lastName, email, phone, birthdate);
-       }
-       PrintCustomerMenu();
+        var birthdate = DateTime.Parse(Console.ReadLine());
+        if (firstName is not null && lastName is not null && phone is not null)
+        {
+            _query.RegisterCustomer(firstName, lastName, email, phone, birthdate);
+        }
+
+        PrintCustomerMenu();
     }
 
     private void ModifyCustomer(String email)
     {
-        _query.ModifyCustomer(email);
+        Console.WriteLine("Please fill in your new:");
+        Console.WriteLine("First name");
+        var firstName = Console.ReadLine();
+        Console.WriteLine("Last name");
+        var lastName = Console.ReadLine();
+        Console.WriteLine("Phone number");
+        var phone = Console.ReadLine();
+        Console.WriteLine("Date of birth");
+        var birthdate = DateTime.Parse(Console.ReadLine());
+        if (firstName is not null && lastName is not null && phone is not null)
+        {
+            _query.ModifyCustomer(firstName, lastName, email, phone, birthdate);
+        }
     }
 
     private void DeleteCustomer(String email)
@@ -110,6 +120,5 @@ public class CustomerMenu
 
     private void MyBookings(String email)
     {
-      
     }
 }
