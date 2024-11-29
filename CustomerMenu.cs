@@ -25,13 +25,13 @@ public class CustomerMenu
             {
                 Console.WriteLine("Email is valid.");
                 PrintCustomerMenu();
-                AskUser(email);
+                await AskUser(email);
             }
             else
             {
                 Console.WriteLine("Email not found.");
                 Console.WriteLine("Let's get you registered!");
-                RegisterCustomer(email);
+                await RegisterCustomer(email);
             }
         }
     }
@@ -45,7 +45,7 @@ public class CustomerMenu
         Console.WriteLine("0. Return to Main Menu");
     }
 
-    private async void AskUser(String email)
+    private async Task AskUser(String email)
     {
         var response = Console.ReadLine();
         if (response is not null)
@@ -53,10 +53,10 @@ public class CustomerMenu
             switch (response)
             {
                 case "2":
-                    ModifyCustomer(email);
+                    await ModifyCustomer(email);
                     break;
                 case "3":
-                    DeleteCustomer(email);
+                    await DeleteCustomer(email);
                     break;
                 case "4":
                     MyBookings(email);
@@ -68,7 +68,7 @@ public class CustomerMenu
         }
     }
 
-    private void RegisterCustomer(String email)
+    private async Task RegisterCustomer(String email)
     {
         //Console.Clear();
         Console.WriteLine("Please fill in your:");
@@ -86,9 +86,10 @@ public class CustomerMenu
         }
 
         PrintCustomerMenu();
+        await AskUser(email);
     }
 
-    private void ModifyCustomer(String email)
+    private async Task ModifyCustomer(String email)
     {
         Console.WriteLine("Please fill in your new:");
         Console.WriteLine("First name");
@@ -101,15 +102,15 @@ public class CustomerMenu
         var birthdate = DateTime.Parse(Console.ReadLine());
         if (firstName is not null && lastName is not null && phone is not null)
         {
-            _query.ModifyCustomer(firstName, lastName, email, phone, birthdate);
+            await _query.ModifyCustomer(firstName, lastName, email, phone, birthdate);
         }
     }
 
-    private void DeleteCustomer(String email)
+    private async Task DeleteCustomer(String email)
     {
-        _query.DeleteCustomer(email);
+        await _query.DeleteCustomer(email);
         Console.WriteLine("Your account has successfully been deleted");
-        _mainMenu.Menu();
+        await _mainMenu.Menu();
     }
 
     private void MyBookings(String email)

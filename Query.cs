@@ -84,18 +84,18 @@ public class Query
 
     // Customer menu metoder
     public async Task<bool> ValidateEmail(String email)
-    {
+    { Console.WriteLine(email);
         await using (var cmd = _db.CreateCommand("SELECT * FROM customer WHERE email = $1"))
-        {
+        { Console.WriteLine("Test4");
             cmd.Parameters.AddWithValue(email);
             await using (var reader = await cmd.ExecuteReaderAsync())
-            {
+            { Console.WriteLine("Test5");
                 while (await reader.ReadAsync())
-                {
+                { Console.WriteLine("Test6");
                     string dbEmail = reader.GetString(3);
                     //Console.WriteLine($"dbEmail: {reader.GetString(0)} \t email: {email}");
                     if (email == dbEmail)
-                    {
+                    { 
                         Console.WriteLine("Welcome!");
                         return true;
                     }
@@ -111,7 +111,7 @@ public class Query
         }
     }
 
-    public async void RegisterCustomer(String firstName, String lastName, String email, String phone, DateTime birth)
+    public async Task RegisterCustomer(String firstName, String lastName, String email, String phone, DateTime birth)
     {
         await using (var cmd = _db.CreateCommand(
                          "INSERT INTO customer (firstname, lastname, email, phone, birth) VALUES ($1, $2, $3, $4, $5)"))
@@ -125,10 +125,9 @@ public class Query
         }
     }
 
-    public async void ModifyCustomer(String firstName, String lastName, String email, String phone, DateTime birth)
+    public async Task ModifyCustomer(String firstName, String lastName, String email, String phone, DateTime birth)
     {
-        await using (var cmd = _db.CreateCommand(
-                         "UPDATE customer SET firstname = $1, lastname = $2, phone = $4, birth = $5 WHERE email = $3"))
+        await using (var cmd = _db.CreateCommand("UPDATE customer SET firstname = $1, lastname = $2, phone = $4, birth = $5 WHERE email = $3"))
         {
             cmd.Parameters.AddWithValue(firstName);
             cmd.Parameters.AddWithValue(lastName);
@@ -139,13 +138,12 @@ public class Query
         }
     }
 
-    public async void DeleteCustomer(String email)
-    {
+    public async Task DeleteCustomer(String email)
+    { Console.Write("test1");
         await using (var cmd = _db.CreateCommand("DELETE FROM customer WHERE email = $1"))
-        {
+        { Console.WriteLine("Test2");
             cmd.Parameters.AddWithValue(email);
             await cmd.ExecuteNonQueryAsync();
         }
     }
 }
-

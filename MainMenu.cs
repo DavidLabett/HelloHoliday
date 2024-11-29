@@ -20,7 +20,7 @@ public class MainMenu
         await AskUser();
     }
 
-    private void PrintMenu()
+    public void PrintMenu()
     {
         Console.WriteLine("Choose option");
         Console.WriteLine("1. Customer");
@@ -28,7 +28,7 @@ public class MainMenu
         Console.WriteLine("9. Quit");
     }
 
-    private async Task<bool> AskUser()
+    public async Task<bool> AskUser()
     {
         var response = Console.ReadLine();
         if (response is not null)
