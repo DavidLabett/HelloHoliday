@@ -107,14 +107,9 @@ public class CustomerMenu
 
     private void DeleteCustomer(String email)
     {
-        if (_query.DeleteCustomer(email))
-        {
-            Console.WriteLine("Your account has successfully been deleted");
-        }
-        else
-        {
-            Console.WriteLine("Your account didn't get deleted");
-        }
+        _query.DeleteCustomer(email);
+        Console.WriteLine("Your account has successfully been deleted");
+        _mainMenu.Menu();
     }
 
     private void MyBookings(String email)

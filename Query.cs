@@ -139,8 +139,13 @@ public class Query
         }
     }
 
-    public bool DeleteCustomer(String email)
+    public async void DeleteCustomer(String email)
     {
-        return true;
+        await using (var cmd = _db.CreateCommand("DELETE FROM customer WHERE email = $1"))
+        {
+            cmd.Parameters.AddWithValue(email);
+            await cmd.ExecuteNonQueryAsync();
+        }
     }
 }
+
