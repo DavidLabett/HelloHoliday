@@ -10,7 +10,7 @@ public class Query
         _db = db;
     }
 
-    public async void ListAll()
+    public async void ListAll() 
     {
         await using (var cmd = _db.CreateCommand("SELECT * FROM items"))
         await using (var reader = await cmd.ExecuteReaderAsync())
