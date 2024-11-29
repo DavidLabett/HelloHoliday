@@ -37,7 +37,7 @@ class Program
                     await bookingQueries.FetchAvailableRooms(parsedCheckIn, parsedCheckOut);
                     */
                    preferences = bookingMenu.Menu();
-                   await bookingQueries.DatePref(preferences);
+                   await bookingQueries.ListBookingPref(preferences);
                     break;
                 case "2":
                     //Test handling BookingMenu and BookingPreferences
