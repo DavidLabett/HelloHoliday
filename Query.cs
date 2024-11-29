@@ -181,9 +181,6 @@ public class Query
             Console.WriteLine("Something went wrong with the inputs..");
         }
     }
-    
-    
-    
 }
 
 
