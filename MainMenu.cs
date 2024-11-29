@@ -14,14 +14,10 @@ public class MainMenu
         _bookingMenu = new BookingMenu(); //Initialize
     }
 
-    public void Menu()
+    public async Task Menu()
     {
-        bool running = true;
-        while (running)
-        {
-            PrintMenu();
-            running = AskUser().Result;
-        }
+        PrintMenu();
+        await AskUser();
     }
 
     private void PrintMenu()

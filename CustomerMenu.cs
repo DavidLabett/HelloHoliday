@@ -45,7 +45,7 @@ public class CustomerMenu
         Console.WriteLine("0. Return to Main Menu");
     }
 
-    private bool AskUser(String email)
+    private async void AskUser(String email)
     {
         var response = Console.ReadLine();
         if (response is not null)
@@ -62,11 +62,10 @@ public class CustomerMenu
                     MyBookings(email);
                     break;
                 case "0":
-                    return false;
+                    await _mainMenu.Menu();
+                    break;
             }
         }
-
-        return true;
     }
 
     private void RegisterCustomer(String email)

@@ -2,7 +2,7 @@
 
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         Console.WriteLine("Hello Holliday!");
         Database database = new();
@@ -13,6 +13,6 @@ class Program
         
         // skapa en meny och skicka in våra actions i den, så vi kan anropa dem
         MainMenu menu = new(query);
-        menu.Menu();
+        await menu.Menu();
     }
 }
