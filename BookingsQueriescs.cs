@@ -1,4 +1,5 @@
 using Npgsql;
+using NpgsqlTypes;
 
 namespace HelloHoliday;
 
@@ -26,31 +27,28 @@ public class BookingsQueriescs
                 }
             }
         }
+
         
-        /*
-        public async Task ListBookingPreferences(BookingPreferences preferences)
+        
+        
+        
+        
+        
+        public async Task DatePref(BookingPreferences preferences)
         {
             await using (var cmd = _db.CreateCommand(
-                             //Direct comparisons with string parameters (text) require casting the enum to text or varchar
                              "SELECT * FROM booking_master " +
-                             "WHERE size::text = $1 " +
-                             "AND pool = $2 " +
-                             "AND entertainment = $3 " +
-                             "AND kidsclub = $4 " +
-                             "AND restaurant = $5 " +
-                             "AND beach_proximity <= $6 " +
-                             "AND city_proximity <= $7"))
+                             "WHERE (booking_end_date IS NULL OR booking_start_date IS NULL OR " +
+                             "       booking_end_date <= $1 OR booking_start_date >= $2)" +
+                             "ORDER BY (room_id)"))
+                                
             {
-                cmd.Parameters.AddWithValue(preferences.RoomSize);
-                cmd.Parameters.AddWithValue(preferences.Pool == "yes");
-                cmd.Parameters.AddWithValue(preferences.Entertainment == "yes");
-                cmd.Parameters.AddWithValue(preferences.KidsClub == "yes");
-                cmd.Parameters.AddWithValue(preferences.Restaurant == "yes");
-                cmd.Parameters.AddWithValue(int.Parse(preferences.DistanceToBeach));
-                cmd.Parameters.AddWithValue(int.Parse(preferences.DistanceToCityCentre));
+                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckOutDate)); // $1
+                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckInDate)); // $2
 
                 await using (var reader = await cmd.ExecuteReaderAsync())
                 {
+                    Console.WriteLine("Inside the reader");
                     while (await reader.ReadAsync())
                     {
                         Console.WriteLine(
@@ -58,24 +56,47 @@ public class BookingsQueriescs
                             $"hotel_id: {reader.GetInt32(1)} \t " +
                             $"price: {reader.GetInt32(2)} \t " +
                             $"description: {reader.GetString(3)} \t " +
-                            $"balcony: {reader.GetBoolean(4)} \t " +
-                            $"size: {reader.GetString(5)} \t " +
-                            $"pool: {reader.GetBoolean(6)} \t " +
-                            $"entertainment: {reader.GetBoolean(7)} \t " +
-                            $"kidsclub: {reader.GetBoolean(8)} \t " +
-                            $"restaurant: {reader.GetBoolean(9)} \t " +
-                            $"beach_proximity: {reader.GetInt32(10)} \t " +
-                            $"city_proximity: {reader.GetInt32(11)} \t " +
-                            $"rating: {reader.GetString(12)}"
+                            $"rating: {reader.GetFloat(12)} \t" +
+                            $"date: {reader.GetDateTime(13).ToString("yy-MM-dd")} to:{reader.GetDateTime(14).ToString("yy-MM-dd")}"
                         );
                     }
                 }
             }
         }
-        */
-       public async Task ListBookingPreferences(BookingPreferences preferences)
-{
-    await using (var cmd = _db.CreateCommand(
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        public async Task ListBookingPreferences(BookingPreferences preferences)
+        {   //Big Query
+            await using (var cmd = _db.CreateCommand(
                      "SELECT * FROM booking_master " +
                      "WHERE (booking_end_date IS NULL OR booking_start_date IS NULL OR " +
                      "       booking_end_date <= $1 OR booking_start_date >= $2) " +
@@ -87,20 +108,22 @@ public class BookingsQueriescs
                      "AND beach_proximity <= $8 " +
                      "AND city_proximity <= $9"))
     {
-        // Add parameters for filtering
-        cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckOutDate)); // $1
-        cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckInDate));  // $2
-        cmd.Parameters.AddWithValue(preferences.RoomSize);                    // $3
-        cmd.Parameters.AddWithValue(preferences.Pool == "yes");               // $4
-        cmd.Parameters.AddWithValue(preferences.Entertainment == "yes");      // $5
-        cmd.Parameters.AddWithValue(preferences.KidsClub == "yes");           // $6
-        cmd.Parameters.AddWithValue(preferences.Restaurant == "yes");         // $7
-        cmd.Parameters.AddWithValue(int.Parse(preferences.DistanceToBeach));  // $8
+        // Parameters
+        cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckOutDate));    // $1
+        cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckInDate));     // $2
+        cmd.Parameters.AddWithValue(preferences.RoomSize);                        // $3
+        cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Pool));                            // $4
+        cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Entertainment));                   // $5
+        cmd.Parameters.AddWithValue(Boolean.Parse(preferences.KidsClub));                        // $6
+        cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Restaurant));                      // $7
+        cmd.Parameters.AddWithValue(int.Parse(preferences.DistanceToBeach));      // $8
         cmd.Parameters.AddWithValue(int.Parse(preferences.DistanceToCityCentre)); // $9
 
-        // Execute and process results
+        //WriteLine reader
+        Console.WriteLine("Next is await reader to write table");
         await using (var reader = await cmd.ExecuteReaderAsync())
         {
+            Console.WriteLine("Inside the reader");
             while (await reader.ReadAsync())
             {
                 Console.WriteLine(
@@ -108,8 +131,8 @@ public class BookingsQueriescs
                     $"hotel_id: {reader.GetInt32(1)} \t " +
                     $"price: {reader.GetInt32(2)} \t " +
                     $"description: {reader.GetString(3)} \t " +
-                    $"rating: {reader.GetString(12)}"
-
+                    $"rating: {reader.GetInt32(12)} \t" +
+                    $"date: {reader.GetDateTime(13)} to:{reader.GetDateTime(14)}"
                    /*
                     $"balcony: {reader.GetBoolean(4)} \t " +
                     $"size: {reader.GetString(5)} \t " +
@@ -129,6 +152,7 @@ public class BookingsQueriescs
         
         
         
+       
         
         public async Task FetchAvailableRooms(DateTime checkIn, DateTime checkOut)
         {

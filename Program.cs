@@ -13,18 +13,21 @@ class Program
         
         
         //TEST HERE:
+        //initialize everything needed
         var bookingQueries = new BookingsQueriescs(db);
         var preferences = new BookingPreferences();
         var bookingMenu = new BookingMenu();
+        //write the meniu
             Console.WriteLine("Select an option to test:");
-            Console.WriteLine("1. Fetch Available Rooms");
-            Console.WriteLine("2.show_master");
+            Console.WriteLine("1. BookingMenu with checkIn and checkOut");
+            Console.WriteLine("2. BookingMenu with all Preferences");
             Console.WriteLine("0. Exit");
-
+        //ReadLine and switch-case
             var response = Console.ReadLine();
             switch (response)
             {
                 case "1":
+                   /*
                     Console.Write("Enter check-in");
                     var checkIn = Console.ReadLine();
                     var parsedCheckIn = DateTime.Parse(checkIn);
@@ -32,8 +35,12 @@ class Program
                     var checkOut = Console.ReadLine();
                     var parsedCheckOut = DateTime.Parse(checkOut);
                     await bookingQueries.FetchAvailableRooms(parsedCheckIn, parsedCheckOut);
+                    */
+                   preferences = bookingMenu.Menu();
+                   await bookingQueries.DatePref(preferences);
                     break;
                 case "2":
+                    //Test handling BookingMenu and BookingPreferences
                     preferences = bookingMenu.Menu(); // Assign returned preferences
                     await bookingQueries.ListBookingPreferences(preferences);
                     break;

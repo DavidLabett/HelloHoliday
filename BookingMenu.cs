@@ -54,12 +54,12 @@ public class BookingMenu
             CheckInDate = checkIn,
             CheckOutDate = checkOut,
             RoomSize = roomSize,
-            Pool = pool == "yes" ? "true" : "false",
-            Entertainment = entertainment == "yes" ? "true" : "false",
-            KidsClub = kidsClub == "yes" ? "true" : "false",
-            Restaurant = restaurant == "yes" ? "true" : "false",
-            DistanceToBeach = int.TryParse(beach, out var beachDistance) ? beachDistance.ToString() : "0",
-            DistanceToCityCentre = int.TryParse(cityCentre, out var cityDistance) ? cityDistance.ToString() : "0",
+            Pool = pool,
+            Entertainment = entertainment,
+            KidsClub = kidsClub,
+            Restaurant = restaurant,
+            DistanceToBeach = beach,
+            DistanceToCityCentre = cityCentre,
             Preference = reviewOrPrice
         };
     }
