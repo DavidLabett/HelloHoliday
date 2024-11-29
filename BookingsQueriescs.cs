@@ -1,57 +1,98 @@
+using System.Net.NetworkInformation;
 using Npgsql;
 using NpgsqlTypes;
 
 namespace HelloHoliday;
 
 public class BookingsQueriescs
-{ 
+{
     NpgsqlDataSource _db;
 
-        public BookingsQueriescs(NpgsqlDataSource db)
-        {
-            _db = db;
-        }
+    public BookingsQueriescs(NpgsqlDataSource db)
+    {
+        _db = db;
+    }
 
-       
-        
-        // Method to fetch available rooms for specific dates (check-in and check-out)
-        
-        public async Task ListAll()
+
+
+    // Method to fetch available rooms for specific dates (check-in and check-out)
+
+    public async Task ListAll()
+    {
+        await using (var cmd = _db.CreateCommand("SELECT * FROM booking_master"))
+        await using (var reader = await cmd.ExecuteReaderAsync())
         {
-            await using (var cmd = _db.CreateCommand("SELECT * FROM booking_master"))
-            await using (var reader = await cmd.ExecuteReaderAsync())
+            while (await reader.ReadAsync())
             {
-                while (await reader.ReadAsync())
-                {
-                    Console.WriteLine($"id: {reader.GetInt32(0)} \t hotel_id: {reader.GetInt32(1)}");
-                }
+                Console.WriteLine($"id: {reader.GetInt32(0)} \t hotel_id: {reader.GetInt32(1)}");
             }
         }
+    }
 
-        
-        
-        
-        
-        
-        
-        public async Task DatePref(BookingPreferences preferences)
+
+
+
+
+
+
+    public async Task DatePref(BookingPreferences preferences)
+    {
+        try
         {
-            await using (var cmd = _db.CreateCommand(
-                             "SELECT * FROM booking_master " +
-                             "WHERE (booking_end_date IS NULL OR booking_start_date IS NULL OR " +
-                             "       booking_end_date <= $1 OR booking_start_date >= $2)" +
-                             "ORDER BY (room_id)"))
-                                
+            //storing bool values:
+            var isPool = Boolean.Parse(preferences.Pool);
+            var isEntertainment = Boolean.Parse(preferences.Entertainment);
+            var isKidsClub = Boolean.Parse(preferences.KidsClub);
+            var isRestaurant = Boolean.Parse(preferences.Restaurant);
+            
+            //storing query
+            var query = "SELECT * FROM booking_master " +
+                        "WHERE (booking_end_date IS NULL OR booking_start_date IS NULL OR " +
+                        "       booking_end_date <= $1 OR booking_start_date >= $2)" ;
+            
+            // Handle Booleans to display both values if false:
+            if (isPool) // if isPool is true
             {
-                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckOutDate)); // $1
-                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckInDate)); // $2
+                query += "AND (pool = $3)"; //add this line to query
+            }
+            if (isEntertainment) 
+            {
+                query += "AND (entertainment = $4)"; 
+            }
+            if (isKidsClub) 
+            {
+                query += "AND (kidsclub = $5)"; 
+            }
+            if (isRestaurant) 
+            {
+                query += "AND (restaurant = $4)"; 
+            }
+                //Adds an ORDER BY after all booleans are handled
+                query +=  "ORDER BY (room_id)";
+            
+            //query passed into _db.CreateCommand
+            await using (var cmd = _db.CreateCommand(query))
+            {
+                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckOutDate));  // $1
+                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckInDate));   // $2
 
+                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Pool));           // $3
+                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Entertainment));  // $4
+                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.KidsClub));       // $5
+                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Restaurant));     // $6
+               
                 await using (var reader = await cmd.ExecuteReaderAsync())
                 {
-                    Console.WriteLine("Inside the reader");
                     while (await reader.ReadAsync())
                     {
                         Console.WriteLine(
+                           //Validation that both boolean values are checked:
+                            $"pool: {reader.GetBoolean(6)} \t " +
+                            $"entertainment: {reader.GetBoolean(7)} \t " +
+                            $"kidsclub: {reader.GetBoolean(8)} \t " +
+                            $"restaurant: {reader.GetBoolean(9)} \t " +
+                            //Validation that both boolean values are checked^
+                            
                             $"room_id: {reader.GetInt32(0)} \t " +
                             $"hotel_id: {reader.GetInt32(1)} \t " +
                             $"price: {reader.GetInt32(2)} \t " +
@@ -62,39 +103,46 @@ public class BookingsQueriescs
                     }
                 }
             }
-        }
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        public async Task ListBookingPreferences(BookingPreferences preferences)
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Not a Bool");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public async Task ListBookingPreferences(BookingPreferences preferences)
         {   //Big Query
             await using (var cmd = _db.CreateCommand(
                      "SELECT * FROM booking_master " +
