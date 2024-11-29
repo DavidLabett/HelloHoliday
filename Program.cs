@@ -27,22 +27,8 @@ class Program
             switch (response)
             {
                 case "1":
-                   /*
-                    Console.Write("Enter check-in");
-                    var checkIn = Console.ReadLine();
-                    var parsedCheckIn = DateTime.Parse(checkIn);
-                    Console.Write("Enter check-out");
-                    var checkOut = Console.ReadLine();
-                    var parsedCheckOut = DateTime.Parse(checkOut);
-                    await bookingQueries.FetchAvailableRooms(parsedCheckIn, parsedCheckOut);
-                    */
                    preferences = bookingMenu.Menu();
                    await bookingQueries.ListBookingPref(preferences);
-                    break;
-                case "2":
-                    //Test handling BookingMenu and BookingPreferences
-                    preferences = bookingMenu.Menu(); // Assign returned preferences
-                    await bookingQueries.ListBookingPreferences(preferences);
                     break;
                 case "0":
                     Console.WriteLine("Exit");
