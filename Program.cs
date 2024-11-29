@@ -15,6 +15,4 @@ class Program
         MainMenu menu = new(query);
         await menu.Menu();
     }
-    
-    
 }

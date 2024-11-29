@@ -82,7 +82,7 @@ CREATE TABLE rating(
     id SERIAL NOT NULL,
     hotel_id INTEGER NOT NULL,
     customer_id INTEGER NOT NULL,
-    rating rating_scale NOT NULL,
+    rating INTEGER NOT NULL,
     CONSTRAINT fk_hotel
         FOREIGN KEY (hotel_id)
             REFERENCES hotel(id),
