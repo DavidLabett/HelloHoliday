@@ -1,7 +1,7 @@
 namespace HelloHoliday;
 public class BookingMenu
 {
-    //Making sure BookingPreferences are returned in method
+    //Make sure BookingPreferences are returned in method
     public BookingPreferences Menu()
     {
         Console.WriteLine("+------Welcome---to---Booking-------+");
