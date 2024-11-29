@@ -1,10 +1,12 @@
+using System.Runtime.InteropServices.JavaScript;
 using Npgsql;
+
 namespace HelloHoliday;
 
 public class Query
 {
     NpgsqlDataSource _db;
-    
+
     public Query(NpgsqlDataSource db)
     {
         _db = db;
@@ -31,7 +33,8 @@ public class Query
             {
                 while (await reader.ReadAsync())
                 {
-                    Console.WriteLine($"id: {reader.GetInt32(0)} \t name: {reader.GetString(1)} \t slogan: {reader.GetString(2)}");
+                    Console.WriteLine(
+                        $"id: {reader.GetInt32(0)} \t name: {reader.GetString(1)} \t slogan: {reader.GetString(2)}");
                 }
             }
         }
@@ -66,10 +69,9 @@ public class Query
                 cmd.Parameters.AddWithValue(slogan);
                 await cmd.ExecuteNonQueryAsync();
             }
-            
         }
     }
-    
+
     public async void DeleteOne(string id)
     {
         // Delete data
@@ -79,21 +81,62 @@ public class Query
             await cmd.ExecuteNonQueryAsync();
         }
     }
-    
+
     // Customer menu metoder
-    public bool ValidateEmail(String email)
+    public async Task<bool> ValidateEmail(String email)
     {
-        return true;
+        await using (var cmd = _db.CreateCommand("SELECT * FROM customer WHERE email = $1"))
+        {
+            cmd.Parameters.AddWithValue(email);
+            await using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    string dbEmail = reader.GetString(3);
+                    //Console.WriteLine($"dbEmail: {reader.GetString(0)} \t email: {email}");
+                    if (email == dbEmail)
+                    {
+                        Console.WriteLine("Welcome!");
+                        return true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid email");
+                        return false;
+                    }
+                }
+
+                return false;
+            }
+        }
     }
 
-    public void RegisterCustomer(String firstName, String lastName, String email, String phone)
+    public async void RegisterCustomer(String firstName, String lastName, String email, String phone, DateTime birth)
     {
-        
+        await using (var cmd = _db.CreateCommand(
+                         "INSERT INTO customer (firstname, lastname, email, phone, birth) VALUES ($1, $2, $3, $4, $5)"))
+        {
+            cmd.Parameters.AddWithValue(firstName);
+            cmd.Parameters.AddWithValue(lastName);
+            cmd.Parameters.AddWithValue(email);
+            cmd.Parameters.AddWithValue(phone);
+            cmd.Parameters.AddWithValue(birth);
+            await cmd.ExecuteNonQueryAsync();
+        }
     }
 
-    public void ModifyCustomer(String email)
+    public async void ModifyCustomer(String firstName, String lastName, String email, String phone, DateTime birth)
     {
-        
+        await using (var cmd = _db.CreateCommand(
+                         "UPDATE customer SET firstname = $1, lastname = $2, phone = $4, birth = $5 WHERE email = $3"))
+        {
+            cmd.Parameters.AddWithValue(firstName);
+            cmd.Parameters.AddWithValue(lastName);
+            cmd.Parameters.AddWithValue(email);
+            cmd.Parameters.AddWithValue(phone);
+            cmd.Parameters.AddWithValue(birth);
+            await cmd.ExecuteNonQueryAsync();
+        }
     }
 
     public bool DeleteCustomer(String email)

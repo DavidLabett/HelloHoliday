@@ -12,6 +12,6 @@ class Program
         var query = new Query(db);
         // skapa en meny och skicka in våra actions i den, så vi kan anropa dem
         MainMenu menu = new(query);
-        menu.Menu();
+        await menu.Menu();
     }
 }

@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices.JavaScript;
+
 namespace HelloHoliday;
 
 public class CustomerMenu
@@ -11,25 +13,27 @@ public class CustomerMenu
         _mainMenu = mainMenu;
     }
 
-    public void Menu()
+    public async Task Menu()
     {
         Console.WriteLine("What's your Email?");
         var email = Console.ReadLine();
-        if (_query.ValidateEmail(email))
+        if (email is not null)
         {
-            bool running = true;
-            while (running)
+            //handles email input
+            var isValid = await _query.ValidateEmail(email);
+            if (isValid)
             {
+                Console.WriteLine("Email is valid.");
                 PrintCustomerMenu();
-                running = AskUser(email);
+                AskUser(email);
+            }
+            else
+            {
+                Console.WriteLine("Email not found.");
+                Console.WriteLine("Let's get you registered!");
+                RegisterCustomer(email);
             }
         }
-        else
-        {
-            RegisterCustomer(email);
-        }
-
-        _mainMenu.Menu();
     }
 
     private void PrintCustomerMenu()
@@ -41,7 +45,7 @@ public class CustomerMenu
         Console.WriteLine("0. Return to Main Menu");
     }
 
-    private bool AskUser(String email)
+    private async void AskUser(String email)
     {
         var response = Console.ReadLine();
         if (response is not null)
@@ -58,28 +62,47 @@ public class CustomerMenu
                     MyBookings(email);
                     break;
                 case "0":
-                    return false;
+                    await _mainMenu.Menu();
+                    break;
             }
         }
-
-        return true;
     }
 
     private void RegisterCustomer(String email)
     {
-        Console.Clear();
+        //Console.Clear();
+        Console.WriteLine("Please fill in your:");
         Console.WriteLine("First name");
         var firstName = Console.ReadLine();
         Console.WriteLine("Last name");
         var lastName = Console.ReadLine();
         Console.WriteLine("Phone number");
         var phone = Console.ReadLine();
-        _query.RegisterCustomer(firstName, lastName, email, phone);
+        Console.WriteLine("Date of birth");
+        var birthdate = DateTime.Parse(Console.ReadLine());
+        if (firstName is not null && lastName is not null && phone is not null)
+        {
+            _query.RegisterCustomer(firstName, lastName, email, phone, birthdate);
+        }
+
+        PrintCustomerMenu();
     }
 
     private void ModifyCustomer(String email)
     {
-        _query.ModifyCustomer(email);
+        Console.WriteLine("Please fill in your new:");
+        Console.WriteLine("First name");
+        var firstName = Console.ReadLine();
+        Console.WriteLine("Last name");
+        var lastName = Console.ReadLine();
+        Console.WriteLine("Phone number");
+        var phone = Console.ReadLine();
+        Console.WriteLine("Date of birth");
+        var birthdate = DateTime.Parse(Console.ReadLine());
+        if (firstName is not null && lastName is not null && phone is not null)
+        {
+            _query.ModifyCustomer(firstName, lastName, email, phone, birthdate);
+        }
     }
 
     private void DeleteCustomer(String email)
@@ -96,6 +119,5 @@ public class CustomerMenu
 
     private void MyBookings(String email)
     {
-      
     }
 }
