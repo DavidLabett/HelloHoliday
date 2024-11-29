@@ -14,7 +14,8 @@ class Program
         
         //TEST HERE:
         var bookingQueries = new BookingsQueriescs(db);
-        
+        var preferences = new BookingPreferences();
+        var bookingMenu = new BookingMenu();
             Console.WriteLine("Select an option to test:");
             Console.WriteLine("1. Fetch Available Rooms");
             Console.WriteLine("2.show_master");
@@ -33,7 +34,8 @@ class Program
                     await bookingQueries.FetchAvailableRooms(parsedCheckIn, parsedCheckOut);
                     break;
                 case "2":
-                    await bookingQueries.ListAll();
+                    preferences = bookingMenu.Menu(); // Assign returned preferences
+                    await bookingQueries.ListBookingPreferences(preferences);
                     break;
                 case "0":
                     Console.WriteLine("Exit");
