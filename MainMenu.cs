@@ -2,14 +2,16 @@ namespace HelloHoliday;
 
 public class MainMenu
 {
-    //Query _query;
+    Query _query;
     BookingMenu _bookingMenu;
     CustomerMenu _customerMenu;
+
     //BookingMenu _bookingMenu = new();
 
     public MainMenu(Query query)
     {
         //_query = query;
+        _query = query;
         _customerMenu = new(query, this);
         _bookingMenu = new BookingMenu(); //Initialize
     }
@@ -45,7 +47,8 @@ public class MainMenu
                 case ("booking"):
                 case ("b"):
                     Console.WriteLine("Bookings Menu");
-                    _bookingMenu.Menu();
+                   var preferences = _bookingMenu.Menu();
+                    await _query.ListBookingPref(preferences);
                     break;
                 case ("9"):
                 case ("quit"):

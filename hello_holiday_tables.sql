@@ -45,6 +45,7 @@ CREATE TYPE room_size AS ENUM(
     'Quad'
 );
 
+-- CHANGED TO size INTEGER
 -- creating the table "room"
 CREATE TABLE room(
     id SERIAL PRIMARY KEY,
@@ -52,7 +53,7 @@ CREATE TABLE room(
     price INTEGER NOT NULL,
     description VARCHAR(255) NOT NULL,
     balcony BOOLEAN NOT NULL,
-    size room_size NOT NULL,
+    size INTEGER NOT NULL,
     CONSTRAINT fk_hotel
         FOREIGN KEY (hotel_id)
             REFERENCES hotel(id)
@@ -77,6 +78,7 @@ CREATE TYPE rating_scale AS ENUM(
     '*****'
 );
 
+-- CHANGED TO rating INTEGER
 -- creating table "rating"
 CREATE TABLE rating(
     id SERIAL NOT NULL,

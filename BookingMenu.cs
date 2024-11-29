@@ -4,6 +4,7 @@ public class BookingMenu
     //Make sure BookingPreferences are returned in method
     public BookingPreferences Menu()
     {
+
         Console.WriteLine("+------Welcome---to---Booking-------+");
         Console.WriteLine("| When would you like to check in?");
         Console.WriteLine("| (Please use format 'YYYY-MM-DD')");
@@ -14,8 +15,8 @@ public class BookingMenu
         Console.Write("> ");
         string? checkOut = Console.ReadLine();
 
-        Console.WriteLine("| What kind of room do you need?");
-        Console.WriteLine("| (Single, Double, Triple or Quad?)");
+        Console.WriteLine("| How many people?");
+        Console.WriteLine("| (1, 2, 3 or 4?)");
         Console.Write("> ");
         string? roomSize = Console.ReadLine()?.ToLower();
 
@@ -44,9 +45,9 @@ public class BookingMenu
         string? cityCentre = Console.ReadLine();
 
         Console.WriteLine("| What matters more to you: ");
-        Console.WriteLine("| Great reviews or great price?");
+        Console.WriteLine("| Great rating or great price?"); // review / price
         Console.Write("> ");
-        string? reviewOrPrice = Console.ReadLine()?.ToLower();
+        string? ratingOrPrice = Console.ReadLine()?.ToLower();
         
         //add check that inputs are not null
         return new BookingPreferences
@@ -60,7 +61,7 @@ public class BookingMenu
             Restaurant = restaurant,
             DistanceToBeach = beach,
             DistanceToCityCentre = cityCentre,
-            Preference = reviewOrPrice
+            Preference = ratingOrPrice
         };
     }
 }

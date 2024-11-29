@@ -159,41 +159,64 @@ public class Query
             var isKidsClub = Boolean.Parse(preferences.KidsClub);
             var isRestaurant = Boolean.Parse(preferences.Restaurant);
             
+            //storing ORDER BY preference of price or review            
+            var preferenceOrder = preferences.Preference;
+            
             //storing query
             var query = "SELECT * FROM booking_master " +
                         "WHERE (booking_end_date IS NULL OR booking_start_date IS NULL OR " +
-                        "       booking_end_date <= $1 OR booking_start_date >= $2)" ;
-            
+                        "       booking_end_date <= $1 OR booking_start_date >= $2)" +
+                        "AND (beach_proximity <= $3)" +
+                        "AND (city_proximity <= $4)" +
+                        "AND (size = $5)";
+                        
             // Handle Booleans to display both values if false:
             if (isPool) // if isPool is true
             {
-                query += "AND (pool = $3)"; //add this line to query
+                query += "AND (pool = $6)"; //add this line to query
             }
             if (isEntertainment) 
             {
-                query += "AND (entertainment = $4)"; 
+                query += "AND (entertainment = $7)"; 
             }
             if (isKidsClub) 
             {
-                query += "AND (kidsclub = $5)"; 
+                query += "AND (kidsclub = $8)"; 
             }
             if (isRestaurant) 
             {
-                query += "AND (restaurant = $4)"; 
+                query += "AND (restaurant = $9)"; 
             }
+                
+                
                 //Adds an ORDER BY after all booleans are handled
-                query +=  "ORDER BY (room_id)";
+                if (preferenceOrder.Contains("price"))
+                {
+                    query +=  " ORDER BY price"; // working
+                }
+                else if (preferenceOrder.Contains("rating"))
+                {
+                    query += " ORDER BY rating"; // NOT WORKING
+                }
             
             //query passed into _db.CreateCommand
             await using (var cmd = _db.CreateCommand(query))
             {
-                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckOutDate));  // $1
-                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckInDate));   // $2
+                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckOutDate));       // $1
+                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckInDate));        // $2
+                
+                cmd.Parameters.AddWithValue(Int32.Parse(preferences.DistanceToBeach));       // $3
+                cmd.Parameters.AddWithValue(Int32.Parse(preferences.DistanceToCityCentre));  // $4
+                cmd.Parameters.AddWithValue(Int32.Parse(preferences.RoomSize));              // $5
+                
+                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Pool));                // $6  
+                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Entertainment));       // $7  
+                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.KidsClub));            // $8  
+                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Restaurant));          // $9  
 
-                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Pool));           // $3
-                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Entertainment));  // $4
-                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.KidsClub));       // $5
-                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Restaurant));     // $6
+
+                cmd.Parameters.AddWithValue(preferences.Preference);                         // $10
+                
                
                 await using (var reader = await cmd.ExecuteReaderAsync())
                 {
@@ -210,8 +233,8 @@ public class Query
                             $"room_id: {reader.GetInt32(0)} \t " +
                             $"hotel_id: {reader.GetInt32(1)} \t " +
                             $"price: {reader.GetInt32(2)} \t " +
-                            $"description: {reader.GetString(3)} \t " +
                             $"rating: {reader.GetFloat(12)} \t" +
+                            $"description: {reader.GetString(3)} \t " +
                             $"date: {reader.GetDateTime(13).ToString("yy-MM-dd")} to:{reader.GetDateTime(14).ToString("yy-MM-dd")}"
                         );
                     }
