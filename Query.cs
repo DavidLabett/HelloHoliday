@@ -244,10 +244,113 @@ public class Query
         }
         catch (Exception e)
         {
-            Console.WriteLine("Something went wrong with the inputs..");
+            Console.WriteLine($"Something went wrong with the inputs.. {e.Message}");
+        }
+    }
+    
+    
+    
+    public async Task ListAvaliableRooms(BookingPreferences preferences)
+    {
+        try
+        {
+            //storing bool values:
+            var isPool = Boolean.Parse(preferences.Pool);
+            var isEntertainment = Boolean.Parse(preferences.Entertainment);
+            var isKidsClub = Boolean.Parse(preferences.KidsClub);
+            var isRestaurant = Boolean.Parse(preferences.Restaurant);
+            
+            //storing ORDER BY preference of price or review            
+            var preferenceOrder = preferences.Preference;
+            
+            //storing query
+            var query = "SELECT * FROM booking_master " +
+                        "WHERE (booking_start_date <= $2 AND booking_end_date >= $1) " +
+                        "AND (beach_proximity <= $3)" +
+                        "AND (city_proximity <= $4)" +
+                        "AND (size = $5)";
+                        
+            // Handle Booleans to display both values if false:
+            if (isPool) // if isPool is true
+            {
+                query += "AND (pool = $6)"; //add this line to query
+            }
+            if (isEntertainment) 
+            {
+                query += "AND (entertainment = $7)"; 
+            }
+            if (isKidsClub) 
+            {
+                query += "AND (kidsclub = $8)"; 
+            }
+            if (isRestaurant) 
+            {
+                query += "AND (restaurant = $9)"; 
+            }
+                
+                
+                //Adds an ORDER BY after all booleans are handled
+                if (preferenceOrder.Contains("price"))
+                {
+                    query +=  " ORDER BY price"; // working
+                }
+                else if (preferenceOrder.Contains("rating"))
+                {
+                    query += " ORDER BY rating"; // NOT WORKING
+                }
+            
+            //query passed into _db.CreateCommand
+            await using (var cmd = _db.CreateCommand(query))
+            {
+                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckOutDate));       // $1
+                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckInDate));        // $2
+                
+                cmd.Parameters.AddWithValue(Int32.Parse(preferences.DistanceToBeach));       // $3
+                cmd.Parameters.AddWithValue(Int32.Parse(preferences.DistanceToCityCentre));  // $4
+                cmd.Parameters.AddWithValue(Int32.Parse(preferences.RoomSize));              // $5
+                
+                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Pool));                // $6  
+                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Entertainment));       // $7  
+                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.KidsClub));            // $8  
+                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Restaurant));          // $9  
+
+
+                cmd.Parameters.AddWithValue(preferences.Preference);                         // $10
+                
+               
+                await using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        Console.WriteLine(
+                           //Validation that both boolean values are checked:
+                            $"pool: {reader.GetBoolean(6)} \t " +
+                            $"entertainment: {reader.GetBoolean(7)} \t " +
+                            $"kidsclub: {reader.GetBoolean(8)} \t " +
+                            $"restaurant: {reader.GetBoolean(9)} \t " +
+                            //Validation that both boolean values are checked^
+                            
+                            $"room_id: {reader.GetInt32(0)} \t " +
+                            $"hotel_id: {reader.GetInt32(1)} \t " +
+                            $"price: {reader.GetInt32(2)} \t " +
+                            $"rating: {reader.GetFloat(12)} \t" +
+                            $"description: {reader.GetString(3)} \t " +
+                            $"date: {reader.GetDateTime(13).ToString("yy-MM-dd")} to:{reader.GetDateTime(14).ToString("yy-MM-dd")}"
+                        );
+                    }
+                }
+            }
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Something went wrong with the inputs.. {e.Message}");
         }
     }
 }
+    
+    
+
 
 
 

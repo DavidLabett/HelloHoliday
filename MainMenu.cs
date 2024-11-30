@@ -48,7 +48,7 @@ public class MainMenu
                 case ("b"):
                     Console.WriteLine("Bookings Menu");
                    var preferences = _bookingMenu.Menu();
-                    await _query.ListBookingPref(preferences);
+                    await _query.ListAvaliableRooms(preferences);
                     break;
                 case ("9"):
                 case ("quit"):
