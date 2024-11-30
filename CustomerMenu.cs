@@ -38,10 +38,10 @@ public class CustomerMenu
 
     private void PrintCustomerMenu()
     {
-        Console.WriteLine("Choose option");
+        Console.WriteLine("### Customer Menu");
+        Console.WriteLine("1. My Bookings");
         Console.WriteLine("2. Modify");
         Console.WriteLine("3. Delete");
-        Console.WriteLine("4. My Bookings");
         Console.WriteLine("0. Return to Main Menu");
     }
 
@@ -52,14 +52,14 @@ public class CustomerMenu
         {
             switch (response)
             {
+                case "1":
+                    MyBookings(email);
+                    break;
                 case "2":
                     await ModifyCustomer(email);
                     break;
                 case "3":
                     await DeleteCustomer(email);
-                    break;
-                case "4":
-                    MyBookings(email);
                     break;
                 case "0":
                     await _mainMenu.Menu();

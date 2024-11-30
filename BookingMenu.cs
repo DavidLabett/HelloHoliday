@@ -11,8 +11,42 @@ public class BookingMenu
         _mainMenu = mainMenu;
     }
 
-    //Make sure BookingPreferences are returned in method
     public async Task Menu()
+    {
+        PrintBookingMenu();
+        await AskUser();
+    }
+
+    public void PrintBookingMenu()
+    {
+        Console.WriteLine("### Booking Menu");
+        Console.WriteLine("1. Search available rooms");
+        Console.WriteLine("2. Make booking");
+        Console.WriteLine("3. Edit booking");
+        Console.WriteLine("4. Delete booking");
+    }
+
+    public async Task AskUser()
+    {
+        var response = Console.ReadLine();
+        if (response is not null)
+        {
+            switch (response)
+            {
+                case "1":
+                    await SearchRooms();
+                    break;
+                case "2":
+                    break;
+                case "3":
+                    break;
+                case "4":
+                    break;
+            }
+        }
+    }
+
+    public async Task SearchRooms()
     {
         Console.WriteLine("+------Welcome---to---Booking-------+");
         Console.WriteLine("| When would you like to check in?");
@@ -72,6 +106,6 @@ public class BookingMenu
             DistanceToCityCentre = cityCentre,
             Preference = reviewOrPrice
         });
-        await _mainMenu.Menu();
+        await Menu();
     }
 }
