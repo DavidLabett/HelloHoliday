@@ -2,18 +2,13 @@ namespace HelloHoliday;
 
 public class MainMenu
 {
-    Query _query;
     BookingMenu _bookingMenu;
     CustomerMenu _customerMenu;
 
-    //BookingMenu _bookingMenu = new();
-
     public MainMenu(Query query)
     {
-        //_query = query;
-        _query = query;
         _customerMenu = new(query, this);
-        _bookingMenu = new BookingMenu(); //Initialize
+        _bookingMenu = new BookingMenu(query, this);
     }
 
     public async Task Menu()
@@ -22,7 +17,7 @@ public class MainMenu
         await AskUser();
     }
 
-    private void PrintMenu()
+    public void PrintMenu()
     {
         Console.WriteLine("Choose option");
         Console.WriteLine("1. Customer");
@@ -30,7 +25,7 @@ public class MainMenu
         Console.WriteLine("9. Quit");
     }
 
-    private async Task<bool> AskUser()
+    public async Task AskUser()
     {
         var response = Console.ReadLine();
         if (response is not null)
@@ -47,17 +42,15 @@ public class MainMenu
                 case ("booking"):
                 case ("b"):
                     Console.WriteLine("Bookings Menu");
-                   var preferences = _bookingMenu.Menu();
-                    await _query.ListAvaliableRooms(preferences);
+                    await _bookingMenu.Menu();
                     break;
                 case ("9"):
                 case ("quit"):
                 case ("q"):
                     Console.WriteLine("Quitting");
-                    return false;
+                    System.Environment.Exit(0);
+                    break;
             }
         }
-
-        return true;
     }
 }
