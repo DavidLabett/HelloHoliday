@@ -40,7 +40,18 @@ public class Menu
     public int GetInputAsInt()
     {
         string input = GetInputAsString();
-        return 0;
+        int number;
+
+        try
+        {
+            number = int.Parse(input);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Need to be a number");
+            return GetInputAsInt();
+        }
+        return number;
     }
 
     public DateTime GetInputAsDate()
