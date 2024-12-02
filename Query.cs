@@ -135,7 +135,6 @@ public class Query
                     if (email == dbEmail)
                     {
                         Console.WriteLine("Welcome!");
-                        await GetCustomer(email);
                         return true;
                     }
                     else

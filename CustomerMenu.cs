@@ -6,6 +6,7 @@ public class CustomerMenu
 {
     Query _query;
     MainMenu _mainMenu;
+    Customer _customer;
 
     public CustomerMenu(Query query, MainMenu mainMenu)
     {
@@ -24,6 +25,7 @@ public class CustomerMenu
             if (isValid)
             {
                 Console.WriteLine("Email is valid.");
+                _customer = await _query.GetCustomer(email);
                 PrintCustomerMenu();
                 await AskUser(email);
             }

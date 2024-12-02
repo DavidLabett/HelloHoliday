@@ -4,7 +4,6 @@ public class BookingMenu
 {
     Query _query;
     MainMenu _mainMenu;
-
     public BookingMenu(Query query, MainMenu mainMenu)
     {
         _query = query;
