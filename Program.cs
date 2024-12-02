@@ -4,7 +4,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        Console.WriteLine("Hello Holliday!");
+        Console.WriteLine("Hello Holiday!");
         Database database = new();
         // hämta anslutningen (db) att göra queries med
         var db = database.Connection();
