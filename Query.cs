@@ -294,7 +294,7 @@ public class Query
                 {
                     query +=  " ORDER BY price"; // working
                 }
-                else if (preferenceOrder.Contains("rating"))
+                else if (preferenceOrder.Contains("average_rating"))
                 {
                     query += " ORDER BY rating"; // NOT WORKING
                 }
