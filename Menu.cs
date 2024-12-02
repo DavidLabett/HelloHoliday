@@ -42,4 +42,22 @@ public class Menu
         string input = GetInputAsString();
         return 0;
     }
+
+    public DateTime GetInputAsDate()
+    {
+        string input = GetInputAsString();
+        DateTime date;
+
+        try
+        {
+            date = DateTime.Parse(input);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Not a date, try yyyy-mm-dd");
+            return GetInputAsDate();
+        }
+
+        return date;
+    }
 }
