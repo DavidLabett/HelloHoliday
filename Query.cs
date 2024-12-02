@@ -82,7 +82,7 @@ public class Query
         }
     }
 
-    public async Task GetCustomer(string email)
+    public async Task<Customer> GetCustomer(string email)
     {
         var query = "SELECT * FROM customer " +
                     "WHERE email = $1"; 
@@ -101,18 +101,21 @@ public class Query
                 string customerPhone = reader.GetString(4);
                 DateTime customerBirth = reader.GetDateTime(5);
                     //Console.WriteLine($"id: {reader.GetInt32(0)} \t name: {reader.GetString(1)} \t email: {reader.GetString(3)}");
-
-                    Customer customer = new(
-                        id = customerId;
-                        firstname = customerFirstName;
-                        lastname = customerLastName;
-                        email = customerEmail;
-                        phone = customerPhone;
-                        birth = customerBirth;
-                        ); 
+                    Console.WriteLine($"{customerId}, {customerFirstName}, {customerFirstName}, {customerEmail}, {customerPhone}, {customerBirth}");
+                    return new Customer
+                    {
+                        id = customerId,
+                        firstname = customerFirstName,
+                        lastname = customerLastName,
+                        email = customerEmail,
+                        phone = customerPhone,
+                        birth = customerBirth
+                    };
                 }
             }
         }
+
+        return null;
     }
 
     
