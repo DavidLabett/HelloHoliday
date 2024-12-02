@@ -83,12 +83,9 @@ public class Query
     }
 
     public async Task GetCustomer(string email)
-
     {
-
         var query = "SELECT * FROM customer " +
                     "WHERE email = $1"; 
-        
         
         await using (var cmd = _db.CreateCommand(query))
         {
@@ -97,8 +94,22 @@ public class Query
             {
                 while (await reader.ReadAsync())
                 {
-                    Console.WriteLine(
-                        $"id: {reader.GetInt32(0)} \t name: {reader.GetString(1)} \t email: {reader.GetString(3)}");
+                int customerId = reader.GetInt32(0);
+                string customerFirstName = reader.GetString(1);
+                string customerLastName = reader.GetString(2);
+                string customerEmail = reader.GetString(3);
+                string customerPhone = reader.GetString(4);
+                DateTime customerBirth = reader.GetDateTime(5);
+                    //Console.WriteLine($"id: {reader.GetInt32(0)} \t name: {reader.GetString(1)} \t email: {reader.GetString(3)}");
+
+                    Customer customer = new(
+                        id = customerId;
+                        firstname = customerFirstName;
+                        lastname = customerLastName;
+                        email = customerEmail;
+                        phone = customerPhone;
+                        birth = customerBirth;
+                        ); 
                 }
             }
         }
