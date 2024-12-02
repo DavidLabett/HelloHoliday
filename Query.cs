@@ -177,11 +177,11 @@ public class Query
         }
     }
 
-    public async Task DeleteCustomer(String email)
+    public async Task DeleteCustomer(int id)
     {
-        await using (var cmd = _db.CreateCommand("DELETE FROM customer WHERE email = $1"))
+        await using (var cmd = _db.CreateCommand("DELETE FROM customer WHERE id = $1"))
         {
-            cmd.Parameters.AddWithValue(email);
+            cmd.Parameters.AddWithValue(id);
             await cmd.ExecuteNonQueryAsync();
         }
     }
