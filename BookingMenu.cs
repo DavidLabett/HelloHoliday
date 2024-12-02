@@ -4,6 +4,7 @@ public class BookingMenu
 {
     Query _query;
     MainMenu _mainMenu;
+    BookingPreferences _bookingPreferences;
 
     public BookingMenu(Query query, MainMenu mainMenu)
     {
@@ -37,10 +38,13 @@ public class BookingMenu
                     await SearchRooms();
                     break;
                 case "2":
+                    await MakeBooking();
                     break;
                 case "3":
+                    await EditBooking();
                     break;
                 case "4":
+                    await DeleteBooking();
                     break;
             }
         }
@@ -92,8 +96,10 @@ public class BookingMenu
         Console.Write("> ");
         string? reviewOrPrice = Console.ReadLine()?.ToLower();
 
+        
+        
         //add check that inputs are not null
-        await _query.ListBookingPref(new BookingPreferences
+        _bookingPreferences = new BookingPreferences
         {
             CheckInDate = checkIn,
             CheckOutDate = checkOut,
@@ -105,7 +111,36 @@ public class BookingMenu
             DistanceToBeach = beach,
             DistanceToCityCentre = cityCentre,
             Preference = reviewOrPrice
-        });
+        };
+        await _query.ListBookingPref(_bookingPreferences);
+        MakeBooking();
         await Menu();
     }
+
+
+    public async Task MakeBooking(int customerId)
+    {
+        Console.WriteLine("Enter room id to make booking");
+        int roomId = int.Parse(Console.ReadLine());
+        Console.WriteLine("Would you like to add an extra bed for 30$? (true/false)");
+        bool extraBed = Boolean.Parse(Console.ReadLine());
+        Console.WriteLine("Would you like to include breakfast? (true/false)");
+        bool dailyBreakfast = Boolean.Parse(Console.ReadLine());
+        await _query.BookRoom(_bookingPreferences, customerId, roomId, extraBed, dailyBreakfast);
+        
+    }
+
+    public async Task EditBooking()
+    {
+        
+    }
+
+    public async Task DeleteBooking()
+    {
+        
+    }
+
+
 }
+
+

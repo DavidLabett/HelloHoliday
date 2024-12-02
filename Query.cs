@@ -361,25 +361,58 @@ public class Query
     // > y/n
    
     // Booking Method
-    public async Task BookRoom(BookingPreferences preferences, int roomId, string email)
+
+    public async Task<int?> GetBookingId()
+    {
+        await using (var cmd = _db.CreateCommand("select MAX(id) from booking limit 1"))
+        {
+            await using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    return reader.GetInt32(0) + 1;
+                }
+            }
+        }
+
+        return null;
+    }
+    
+    public async Task BookRoom(BookingPreferences preferences, int customerId, int roomId, bool extraBed, bool dailyBreakfast)
     {
         try
         { 
-                                                            // Add into bookingXrooms as well 
-            var bookingQuery = "INSERT INTO bookings (customer_id, room_id, booking_start_date, booking_end_date, extra_bed, breakfast) " +
-                               "VALUES ($1, $2, $3, $4)";
+            int? bookingId = await GetBookingId();
+            string bookingQuery;
+            
+            bookingQuery = "INSERT INTO booking (id, customer_id, start_date, end_date, extra_bed, breakfast) " +
+                                               "VALUES ("+bookingId+", $1, $2, $3, $4, $5)";
+            
+                                                             
+            
 
             await using (var cmd = _db.CreateCommand(bookingQuery))
             {
                 // Find id based on email
                 //var customerId = email;
 
-               // cmd.Parameters.AddWithValue(customerId);                               // $1
-                cmd.Parameters.AddWithValue(roomId);                                   // $2
+                cmd.Parameters.AddWithValue(customerId);                               // $1
+                //cmd.Parameters.AddWithValue(roomId);                                   // $2
                 cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckInDate));  // $3
                 cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckOutDate)); // $4
-               // cmd.Parameters.AddWithValue(Boolean.Parse(preferences.extra_bed));     // $5
-                //cmd.Parameters.AddWithValue(Boolean.Parse(preferences.breakfast));     // $6
+                cmd.Parameters.AddWithValue(extraBed);     // $5
+                cmd.Parameters.AddWithValue(dailyBreakfast);     // $6
+                
+                await cmd.ExecuteNonQueryAsync();
+            }
+            // Add into bookingXrooms as well
+            var bookingXroomsQuery = "INSERT INTO booking_x_rooms (booking_id, room_id)" + 
+                                    "VALUES ("+bookingId+", $1)";
+            await using (var cmd = _db.CreateCommand(bookingXroomsQuery))
+            {
+                cmd.Parameters.AddWithValue(roomId);  //$1
+                
+                await cmd.ExecuteNonQueryAsync();
             }
         }
         catch (Exception e)
@@ -387,7 +420,17 @@ public class Query
             Console.WriteLine($"Error while booking the room: {e.Message}");
         }
     }
-    
+
+    /*
+     public async Task ModifyBooking(BookingId)
+    {
+        int? bookingId = await GetBookingId();
+    }
+    public async Task DeleteBooking(BookingId)
+    {
+        int? bookingId = await GetBookingId();
+    }
+    */
     
 }
     
