@@ -249,7 +249,7 @@ public class Query
     }
     
     
-    
+    // List available rooms within two dates,  based on preferences
     public async Task ListAvaliableRooms(BookingPreferences preferences)
     {
         try
@@ -320,6 +320,7 @@ public class Query
                
                 await using (var reader = await cmd.ExecuteReaderAsync())
                 {
+                    Console.WriteLine("Available Rooms:");
                     while (await reader.ReadAsync())
                     {
                         Console.WriteLine(
@@ -347,6 +348,44 @@ public class Query
             Console.WriteLine($"Something went wrong with the inputs.. {e.Message}");
         }
     }
+    
+    // Ask follow-up questions:
+    // Would you like to book a room based on your search?
+     // > Enter the room id of your choice
+    // Would you like to add an extra bed for 30$?
+    // > y/n
+    // Would you like to include breakfast?
+    // > y/n
+   
+    // Booking Method
+    public async Task BookRoom(BookingPreferences preferences, int roomId, string email)
+    {
+        try
+        { 
+                                                            // Add into bookingXrooms as well 
+            var bookingQuery = "INSERT INTO bookings (customer_id, room_id, booking_start_date, booking_end_date, extra_bed, breakfast) " +
+                               "VALUES ($1, $2, $3, $4)";
+
+            await using (var cmd = _db.CreateCommand(bookingQuery))
+            {
+                // Find id based on email
+                //var customerId = email;
+
+                cmd.Parameters.AddWithValue(customerId);                               // $1
+                cmd.Parameters.AddWithValue(roomId);                                   // $2
+                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckInDate));  // $3
+                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckOutDate)); // $4
+                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.extra_bed));     // $5
+                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.breakfast));     // $6
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error while booking the room: {e.Message}");
+        }
+    }
+    
+    
 }
     
     
