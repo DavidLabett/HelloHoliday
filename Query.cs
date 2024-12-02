@@ -82,6 +82,30 @@ public class Query
         }
     }
 
+    public async Task GetCustomer(string email)
+
+    {
+
+        var query = "SELECT * FROM customer " +
+                    "WHERE email = $1"; 
+        
+        
+        await using (var cmd = _db.CreateCommand(query))
+        {
+            cmd.Parameters.AddWithValue(email);
+            await using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    Console.WriteLine(
+                        $"id: {reader.GetInt32(0)} \t name: {reader.GetString(1)} \t email: {reader.GetString(3)}");
+                }
+            }
+        }
+    }
+
+    
+
     // Customer menu metoder
     public async Task<bool> ValidateEmail(String email)
     {
@@ -97,6 +121,7 @@ public class Query
                     if (email == dbEmail)
                     {
                         Console.WriteLine("Welcome!");
+                        await GetCustomer(email);
                         return true;
                     }
                     else
