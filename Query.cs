@@ -374,12 +374,12 @@ public class Query
                 // Find id based on email
                 //var customerId = email;
 
-                cmd.Parameters.AddWithValue(customerId);                               // $1
+               // cmd.Parameters.AddWithValue(customerId);                               // $1
                 cmd.Parameters.AddWithValue(roomId);                                   // $2
                 cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckInDate));  // $3
                 cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckOutDate)); // $4
-                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.extra_bed));     // $5
-                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.breakfast));     // $6
+               // cmd.Parameters.AddWithValue(Boolean.Parse(preferences.extra_bed));     // $5
+                //cmd.Parameters.AddWithValue(Boolean.Parse(preferences.breakfast));     // $6
             }
         }
         catch (Exception e)
