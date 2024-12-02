@@ -1,6 +1,6 @@
 namespace HelloHoliday;
 
-public class MainMenu
+public class MainMenu : Menu
 {
     BookingMenu _bookingMenu;
     CustomerMenu _customerMenu;
@@ -22,14 +22,15 @@ public class MainMenu
         Console.WriteLine("Choose option");
         Console.WriteLine("1. Customer");
         Console.WriteLine("2. Booking");
-        Console.WriteLine("9. Quit");
+        Console.WriteLine("0. Quit");
     }
 
     public async Task AskUser()
     {
-        var response = Console.ReadLine();
-        if (response is not null)
+        while (true)
         {
+            var response = GetInputAsString();
+
             switch (response)
             {
                 case ("1"):
@@ -44,13 +45,14 @@ public class MainMenu
                     Console.WriteLine("Bookings Menu");
                     await _bookingMenu.Menu();
                     break;
-                case ("9"):
+                case ("0"):
                 case ("quit"):
                 case ("q"):
                     Console.WriteLine("Quitting");
                     System.Environment.Exit(0);
                     break;
             }
+            PrintMenu();
         }
     }
 }

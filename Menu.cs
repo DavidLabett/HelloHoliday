@@ -1,6 +1,6 @@
 ﻿namespace HelloHoliday;
 
-public class Menu
+public abstract class Menu
 {
     public string GetInputAsString()
     {
