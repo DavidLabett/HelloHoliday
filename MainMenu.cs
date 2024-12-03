@@ -7,7 +7,7 @@ public class MainMenu : Menu
 
     public MainMenu(Query query)
     {
-        _customerMenu = new(query, this);
+        _customerMenu = new CustomerMenu(query);
         _bookingMenu = new BookingMenu(query, this);
     }
 
@@ -35,6 +35,7 @@ public class MainMenu : Menu
         bool continueMenu = true;
         while (continueMenu) // this method sends the user to other functions or it exits the program
         // by having this loop we make sure that the program doesn't end until we tell it to
+        // we also make sure we get an valid answer befor continuing
         {
             var response = GetInputAsString();
 
@@ -43,19 +44,17 @@ public class MainMenu : Menu
                 case ("1"):
                 case ("customer"):
                 case ("c"):
-                    Console.WriteLine("Customer Menu");
                     await _customerMenu.Menu();
                     break;
                 case ("2"):
                 case ("booking"):
                 case ("b"):
-                    Console.WriteLine("Bookings Menu");
                     await _bookingMenu.Menu();
                     break;
                 case ("0"):
                 case ("quit"):
                 case ("q"):
-                    Console.WriteLine("Quitting");
+                    Console.WriteLine("+=====---Quitting---======+");
                     continueMenu = false;
                     break;
             }

@@ -3,13 +3,11 @@ namespace HelloHoliday;
 public class CustomerMenu : Menu
 {
     Query _query;
-    MainMenu _mainMenu;
-    Customer _customer;
+    Customer? _customer;
 
-    public CustomerMenu(Query query, MainMenu mainMenu)
+    public CustomerMenu(Query query)
     {
         _query = query;
-        _mainMenu = mainMenu;
     }
 
     public async Task Menu()
@@ -24,9 +22,12 @@ public class CustomerMenu : Menu
             
             _customer = await _query.GetCustomer(email);
             Console.Clear();
-            Console.WriteLine($"Welcome back {_customer.firstname} {_customer.lastname}!");
-            PrintCustomerMenu();
-            await AskUser();
+            if (_customer is not null)
+            {
+                Console.WriteLine($"Welcome back {_customer.firstname} {_customer.lastname}!");
+                PrintCustomerMenu();
+                await AskUser();
+            }
         }
         else
         {
@@ -55,22 +56,32 @@ public class CustomerMenu : Menu
 
     private async Task AskUser()
     {
-        var response = GetInputAsString();
-
-        switch (response)
+        bool continueMenu = true;
+        while (continueMenu) // so we get a valid answer before continuing
         {
-            case "1":
-                await MyBookings();
-                break;
-            case "2":
-                await ModifyCustomer();
-                break;
-            case "3":
-                await DeleteCustomer();
-                break;
-            case "0":
-                await _mainMenu.Menu();
-                break;
+            var response = GetInputAsString();
+
+            switch (response)
+            {
+                case "1":
+                    await MyBookings();
+                    break;
+                case "2":
+                    await ModifyCustomer();
+                    break;
+                case "3":
+                    await DeleteCustomer();
+                    continueMenu = false; // when we no longer continue the menu we will return to main menu to complete the method we came from
+                    break;
+                case "0":
+                    continueMenu = false;
+                    break;
+            }
+
+            if (continueMenu) // if a wrong input is given print the menu and try again
+            {
+                PrintCustomerMenu();
+            }
         }
     }
 
@@ -123,12 +134,16 @@ public class CustomerMenu : Menu
         Console.WriteLine("+===================================+");
 
         // Display current details for reference
-        Console.WriteLine("| Current Details:");
-        Console.WriteLine($"| First Name:     {_customer.firstname}");
-        Console.WriteLine($"| Last Name:      {_customer.lastname}");
-        Console.WriteLine($"| Phone Number:   {_customer.phone}");
-        Console.WriteLine($"| Date of Birth:  {_customer.birth}");
-        Console.WriteLine("+-----------------------------------+");
+        if (_customer is not null)
+        {
+            Console.WriteLine("| Current Details:");
+            Console.WriteLine($"| First Name:     {_customer.firstname}");
+            Console.WriteLine($"| Last Name:      {_customer.lastname}");
+            Console.WriteLine($"| Phone Number:   {_customer.phone}");
+            Console.WriteLine($"| Date of Birth:  {_customer.birth}");
+            Console.WriteLine("+-----------------------------------+");
+        }
+
         // New details below
         Console.WriteLine("| Please fill in your new details:");
 
@@ -165,15 +180,20 @@ public class CustomerMenu : Menu
 
     private async Task DeleteCustomer()
     {
-        await _query.DeleteCustomer(_customer.id);
-        Console.WriteLine("| Your account has successfully been deleted |");
-        Console.WriteLine("[Press any button to continue]");
-        Console.ReadLine();
-        await _mainMenu.Menu();
+        if (_customer is not null)
+        {
+            await _query.DeleteCustomer(_customer.id);
+            Console.WriteLine("| Your account has successfully been deleted |");
+            Console.WriteLine("[Press any button to continue]");
+            Console.ReadLine();
+        }
     }
 
     private async Task MyBookings()
     {
-        await _query.MyBookings(_customer.id);
+        if (_customer is not null)
+        {
+            await _query.MyBookings(_customer.id);
+        }
     }
 }
