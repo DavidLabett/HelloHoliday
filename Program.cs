@@ -5,13 +5,14 @@ class Program
     static async Task Main(string[] args)
     {
         Console.WriteLine("Hello Holiday!");
+        
         Database database = new();
-        // hämta anslutningen (db) att göra queries med
+        // gets the connection (db) used for making queries (talking to the database)
         var db = database.Connection();
-        // skapa actions och skicka in anslutningen, så att vi kan köra queries till databasen där
+        // creates the query-object where the actions are made and send in the connection so it can talk to the database
         var query = new Query(db);
         
-        // skapa en meny och skicka in våra actions i den, så vi kan anropa dem
+        // creates a menu and sends in our query-object so that the menu can use the querie methods
         MainMenu menu = new(query);
         await menu.Menu();
     }
