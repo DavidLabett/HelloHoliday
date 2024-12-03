@@ -575,14 +575,31 @@ public class Query
     }
 
 
-    public async Task MyBookings(int Id)
+    public async Task MyBookings(int customerId)
     {
-        await using (var cmd = _db.CreateCommand("SELECT * FROM booking WHERE id = $1"))
+        var query = "SELECT * FROM mybookings WHERE customer_id = $1";
+        await using (var cmd = _db.CreateCommand(query))
         {
-            cmd.Parameters.AddWithValue(id);
-            await cmd.ExecuteNonQueryAsync();
+            cmd.Parameters.AddWithValue(customerId);
+            await using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                Console.WriteLine("Your bookings:");
+                while (await reader.ReadAsync())
+                {
+                    Console.WriteLine(
+                        $"B.Id: {reader.GetInt32(0)} \t " +
+                        $"C.Id: {reader.GetInt32(1)} \t " +
+                        $"Customer: {reader.GetString(2)} \t " +
+                        $"Dates: {reader.GetDateTime(3).ToString("yy-MM-dd")} to:{reader.GetDateTime(4).ToString("yy-MM-dd")} \t " +
+                        $"Extra bed: {reader.GetBoolean(5)} \t " +
+                        $"Breakfast: {reader.GetBoolean(6)} \t " +
+                        $"Price/night: {reader.GetInt32(8)} \t " +
+                        $"Room size: {reader.GetInt32(11)} \t " +
+                        $"City: {reader.GetString(15)} \t"
+                    );
+                }
+            }
         }
     }
-    
-    
+
 }

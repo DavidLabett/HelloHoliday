@@ -110,7 +110,7 @@ public class CustomerMenu : Menu
         await _mainMenu.Menu();
     }
 
-    private void MyBookings()
+    private async Task MyBookings()
     {
         await _query.MyBookings(_customer.id);
     }
