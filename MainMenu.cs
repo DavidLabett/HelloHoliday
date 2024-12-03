@@ -8,7 +8,7 @@ public class MainMenu : Menu
     public MainMenu(Query query)
     {
         _customerMenu = new CustomerMenu(query);
-        _bookingMenu = new BookingMenu(query, this);
+        _bookingMenu = new BookingMenu(query, _customerMenu);
     }
 
     public async Task Menu()

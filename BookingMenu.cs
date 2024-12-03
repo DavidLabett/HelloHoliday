@@ -3,37 +3,20 @@ namespace HelloHoliday;
 public class BookingMenu : Menu
 {
     Query _query;
-    MainMenu _mainMenu;
     BookingPreferences? _bookingPreferences;
-    Customer _customer;
+    Customer? _customer;
     CustomerMenu _customerMenu;
 
-    public BookingMenu(Query query, MainMenu mainMenu)
+    public BookingMenu(Query query, CustomerMenu customerMenu)
     {
         _query = query;
-        _mainMenu = mainMenu;
+        _customerMenu = customerMenu;
     }
 
     public async Task Menu()
     {
-        Console.WriteLine("What's your Email?");
-        var email = GetInputAsString();
-
-        //handles email input
-        var isValid = await _query.ValidateEmail(email);
-        if (isValid)
-        {
-            Console.WriteLine("Email is valid.");
-            _customer = await _query.GetCustomer(email);
-            PrintBookingMenu();
-            await AskUser();
-        }
-        else
-        {
-            Console.WriteLine("Email not found.");
-            Console.WriteLine("Let's get you registered!");
-            await _customerMenu.RegisterCustomer(email);
-        }
+        PrintBookingMenu();
+        await AskUser();
     }
 
     public void PrintBookingMenu()
@@ -53,96 +36,105 @@ public class BookingMenu : Menu
 
     public async Task AskUser()
     {
-        var response = GetInputAsString();
-
-        switch (response)
+        bool continueMenu = true;
+        while (continueMenu) // so we get a valid answer before continuing
         {
-            case "1":
-                await SearchRooms();
-                break;
-            case "2":
-                // await MakeBooking();
-                break;
-            case "3":
-                await EditBooking();
-                break;
-            case "4":
-                await DeleteBooking();
-                break;
-            case "0":
-                await _mainMenu.Menu();
-                break;
+            var response = GetInputAsString();
+
+            switch (response)
+            {
+                case "1":
+                    await SearchRooms();
+                    break;
+                case "2":
+                    await MakeBooking();
+                    break;
+                case "3":
+                    await EditBooking();
+                    break;
+                case "4":
+                    await DeleteBooking();
+                    break;
+                case "0":
+                    //await _mainMenu.Menu();
+                    continueMenu = false;
+                    break;
+            }
+            if (continueMenu) // if a wrong input is given print the menu and try again
+            {
+                PrintBookingMenu();
+            }
         }
     }
-    
+
     public async Task SearchRooms()
     {
         Console.Clear();
-Console.WriteLine("+===================================+");
-Console.WriteLine("|         ROOM BOOKING FORM         |");
-Console.WriteLine("+===================================+");
-Console.WriteLine("| Please fill in the following info:|");
-Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("|         ROOM BOOKING FORM         |");
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("| Please fill in the following info:|");
+        Console.WriteLine("+-----------------------------------+");
 
-// Check-in date
-Console.WriteLine("| When would you like to check in?  |");
-Console.WriteLine("| (Format: YYYY-MM-DD)              |");
-Console.WriteLine("+-----------------------------------+");
-DateTime checkIn = GetInputAsDate();
+        // Check-in date
+        Console.WriteLine("| When would you like to check in?  |");
+        Console.WriteLine("| (Format: YYYY-MM-DD)              |");
+        Console.WriteLine("+-----------------------------------+");
+        DateTime checkIn = GetInputAsDate();
 
-// Check-out date
-Console.WriteLine("+-----------------------------------+");
-Console.WriteLine("| When will you check out?          |");
-Console.WriteLine("| (Format: YYYY-MM-DD)              |");
-Console.WriteLine("+-----------------------------------+");
-DateTime checkOut = GetInputAsDate();
+        // Check-out date
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| When will you check out?          |");
+        Console.WriteLine("| (Format: YYYY-MM-DD)              |");
+        Console.WriteLine("+-----------------------------------+");
+        DateTime checkOut = GetInputAsDate();
 
-// Room type
-Console.WriteLine("+-----------------------------------+");
-Console.WriteLine("| What type of room do you need?    |");
-Console.WriteLine("| (Single, Double, Triple, Quad)    |");
-Console.WriteLine("+-----------------------------------+");
-int roomSize = GetInputAsInt();
+        // Room type
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| What type of room do you need?    |");
+        Console.WriteLine("| (Single, Double, Triple, Quad)    |");
+        Console.WriteLine("+-----------------------------------+");
+        int roomSize = GetInputAsInt();
 
-// bools
-Console.WriteLine("+-----------------------------------+");
-Console.WriteLine("| Do you want a pool? (true/false)  |");
-bool pool = GetInputAsBool();
+        // bools
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| Do you want a pool? (true/false)  |");
+        bool pool = GetInputAsBool();
 
-Console.WriteLine("+-----------------------------------+");
-Console.WriteLine("| Entertainment options? (true/false)|");
-bool entertainment = GetInputAsBool();
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| Entertainment options? (true/false)|");
+        bool entertainment = GetInputAsBool();
 
-Console.WriteLine("+-----------------------------------+");
-Console.WriteLine("| Is a kid's club important? (true/false)|");
-bool kidsClub = GetInputAsBool();
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| Is a kid's club important? (true/false)|");
+        bool kidsClub = GetInputAsBool();
 
-Console.WriteLine("+-----------------------------------+");
-Console.WriteLine("| On-site restaurant? (true/false) |");
-bool restaurant = GetInputAsBool();
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| On-site restaurant? (true/false) |");
+        bool restaurant = GetInputAsBool();
 
-// Proximity beach and city
-Console.WriteLine("+-----------------------------------+");
-Console.WriteLine("| Max distance from the beach (km):|");
-int beach = GetInputAsInt();
+        // Proximity beach and city
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| Max distance from the beach (km):|");
+        int beach = GetInputAsInt();
 
-Console.WriteLine("+-----------------------------------+");
-Console.WriteLine("| Max distance from city centre (km):|");
-int cityCentre = GetInputAsInt();
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| Max distance from city centre (km):|");
+        int cityCentre = GetInputAsInt();
 
-// Preference review or price
-Console.WriteLine("+-----------------------------------+");
-Console.WriteLine("| What matters more:                |");
-Console.WriteLine("| - Great reviews                   |");
-Console.WriteLine("| - Great price                     |");
-Console.WriteLine("+-----------------------------------+");
-string reviewOrPrice = GetInputAsString();
+        // Preference review or price
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| What matters more:                |");
+        Console.WriteLine("| - Great reviews                   |");
+        Console.WriteLine("| - Great price                     |");
+        Console.WriteLine("+-----------------------------------+");
+        string reviewOrPrice = GetInputAsString();
 
-// Confirmation message
-Console.WriteLine("+===================================+");
-Console.WriteLine("| Thank you! Your preferences have  |");
-Console.WriteLine("| been recorded. Searching rooms... |");
-Console.WriteLine("+===================================+");
+        // Confirmation message
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("| Thank you! Your preferences have  |");
+        Console.WriteLine("| been recorded. Searching rooms... |");
+        Console.WriteLine("+===================================+");
         _bookingPreferences = new BookingPreferences
         {
             CheckInDate = checkIn,
@@ -157,57 +149,84 @@ Console.WriteLine("+===================================+");
             Preference = reviewOrPrice
         };
         await _query.ListAvailableRooms(_bookingPreferences);
-        await Menu();
+        //await Menu();
     }
 
-
-    public async Task MakeBooking(int customerId)
+    public async Task<Customer?> GetCustomer(string email)
     {
-        if (_bookingPreferences is null)
+        //handles email input
+        var isValid = await _query.ValidateEmail(email);
+        if (isValid)
         {
-            await SearchRooms();
+            Console.WriteLine("Email is valid.");
+            return await _query.GetCustomer(email);
         }
         else
         {
-            Console.Clear();
-            Console.WriteLine("+===================================+");
-            Console.WriteLine("|        FINALIZE YOUR BOOKING      |");
-            Console.WriteLine("+===================================+");
+            Console.WriteLine("Email not found.");
+            return null;
+        }
+    }
 
-            // Room id input
-            Console.WriteLine("| Please enter the Room ID:         |");
-            Console.WriteLine("+-----------------------------------+");
-            int roomId = GetInputAsInt();
+    public async Task MakeBooking()
+    {
+        Console.WriteLine("What's your Email?");
+        var email = GetInputAsString();
+        
+        _customer = await GetCustomer(email);
+        if (_customer is null)
+        {
+            await _customerMenu.RegisterCustomer(email);
+            _customer = await _query.GetCustomer(email);
+        }
+        else
+        {
+            if (_bookingPreferences is null)
+            {
+                await SearchRooms();
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("+===================================+");
+                Console.WriteLine("|        FINALIZE YOUR BOOKING      |");
+                Console.WriteLine("+===================================+");
 
-            // Extra_bed option
-            Console.WriteLine("+-----------------------------------+");
-            Console.WriteLine("| Would you like an extra bed?      |");
-            Console.WriteLine("| (Additional $30 per night)        |");
-            Console.WriteLine("| Enter true or false:              |");
-            Console.WriteLine("+-----------------------------------+");
-            bool extraBed = GetInputAsBool();
+                // Room id input
+                Console.WriteLine("| Please enter the Room ID:         |");
+                Console.WriteLine("+-----------------------------------+");
+                int roomId = GetInputAsInt();
 
-            // Breakfast option
-            Console.WriteLine("+-----------------------------------+");
-            Console.WriteLine("| Would you like to include         |");
-            Console.WriteLine("| daily breakfast? (true/false)     |");
-            Console.WriteLine("+-----------------------------------+");
-            bool dailyBreakfast = GetInputAsBool();
+                // Extra_bed option
+                Console.WriteLine("+-----------------------------------+");
+                Console.WriteLine("| Would you like an extra bed?      |");
+                Console.WriteLine("| (Additional $30 per night)        |");
+                Console.WriteLine("| Enter true or false:              |");
+                Console.WriteLine("+-----------------------------------+");
+                bool extraBed = GetInputAsBool();
 
-            // loading
-            Console.WriteLine("+-----------------------------------+");
-            Console.WriteLine("| Booking your room, please wait... |");
-            Console.WriteLine("+===================================+");
+                // Breakfast option
+                Console.WriteLine("+-----------------------------------+");
+                Console.WriteLine("| Would you like to include         |");
+                Console.WriteLine("| daily breakfast? (true/false)     |");
+                Console.WriteLine("+-----------------------------------+");
+                bool dailyBreakfast = GetInputAsBool();
 
-            await _query.BookRoom(_bookingPreferences, customerId, roomId, extraBed, dailyBreakfast);
+                // loading
+                Console.WriteLine("+-----------------------------------+");
+                Console.WriteLine("| Booking your room, please wait... |");
+                Console.WriteLine("+===================================+");
 
-            // confirmation
-            Console.WriteLine("+===================================+");
-            Console.WriteLine("| Your booking is confirmed!        |");
-            Console.WriteLine("| Thank you for choosing us.        |");
-            Console.WriteLine("+===================================+");
-            Console.WriteLine("[Press any button to continue]");
-            Console.ReadLine(); // pause
+                await _query.BookRoom(_bookingPreferences, _customer.id, roomId, extraBed, dailyBreakfast);
+
+                // confirmation
+                Console.WriteLine("+===================================+");
+                Console.WriteLine("| Your booking is confirmed!        |");
+                Console.WriteLine("| Thank you for choosing us.        |");
+                Console.WriteLine("+===================================+");
+                Console.WriteLine("[Press any button to continue]");
+                Console.ReadLine(); // pause
+            }
         }
     }
 
