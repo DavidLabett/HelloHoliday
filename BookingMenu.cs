@@ -56,7 +56,6 @@ public class BookingMenu : Menu
                     await DeleteBooking();
                     break;
                 case "0":
-                    //await _mainMenu.Menu();
                     continueMenu = false;
                     break;
             }
@@ -149,7 +148,6 @@ public class BookingMenu : Menu
             Preference = reviewOrPrice
         };
         await _query.ListAvailableRooms(_bookingPreferences);
-        //await Menu();
     }
 
     public async Task<Customer?> GetCustomer(string email)
@@ -237,7 +235,7 @@ public class BookingMenu : Menu
 
     public async Task DeleteBooking()
     {
-        // My booking metod här?
+        // My booking method here?
         Console.Clear();
         Console.WriteLine("+===================================+");
         Console.WriteLine("|         DELETE A BOOKING          |");
