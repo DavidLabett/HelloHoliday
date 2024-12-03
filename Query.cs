@@ -366,7 +366,7 @@ public class Query
     {
         try
         {
-            var bookingxroomsQuery = "DELETE from booking_x_rooms where id = $1";
+            var bookingxroomsQuery = "DELETE from booking_x_rooms where booking_id = $1";
             var bookingQuery = "DELETE from booking where id = $1";
 
             await using (var cmd = _db.CreateCommand(bookingxroomsQuery))
