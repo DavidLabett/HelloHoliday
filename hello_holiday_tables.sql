@@ -139,15 +139,15 @@ SELECT
     b.end_date AS booking_end_date
 FROM
     room r
-        LEFT JOIN public.booking_x_rooms bxr ON r.id = bxr.room_id
-        LEFT JOIN public.booking b ON bxr.booking_id = b.id
+        LEFT JOIN booking_x_rooms bxr ON r.id = bxr.room_id
+        LEFT JOIN booking b ON bxr.booking_id = b.id
         JOIN hotel h ON h.id = r.hotel_id
         JOIN 
         (
         SELECT ROUND(AVG(rating), 1) AS average_rating, hotel_id
         FROM rating
         GROUP BY hotel_id
-        ) r2 ON r2.hotel_id = h.id
+        ) r2 ON r2.hotel_id = h.id;
 
 
 -- creating a master view for all rooms
@@ -174,8 +174,9 @@ FROM
         SELECT ROUND(AVG(rating), 1) AS average_rating, hotel_id
         FROM rating
         GROUP BY hotel_id
-        ) r2 ON r2.hotel_id = h.id
+        ) r2 ON r2.hotel_id = h.id;
 
+-- creates a view for my bookings
 CREATE VIEW mybookings AS
 SELECT
     b.id AS booking_id,
