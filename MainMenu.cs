@@ -27,7 +27,8 @@ public class MainMenu : Menu
 
     public async Task AskUser()
     {
-        while (true) // this method sends the user to other functions or it exits the program
+        bool continueMenu = true;
+        while (continueMenu) // this method sends the user to other functions or it exits the program
         // by having this loop we make sure that the program doesn't end until we tell it to
         {
             var response = GetInputAsString();
@@ -50,10 +51,13 @@ public class MainMenu : Menu
                 case ("quit"):
                 case ("q"):
                     Console.WriteLine("Quitting");
-                    System.Environment.Exit(0);
+                    continueMenu = false;
                     break;
             }
-            PrintMenu();
+            if (continueMenu)
+            {
+                PrintMenu();
+            }
         }
     }
 }
