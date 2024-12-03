@@ -3,7 +3,7 @@ namespace HelloHoliday;
 
 public class Database
 {
-        // databasuppgifter
+        // database details
         private readonly string _host = "45.10.162.204";
         private readonly string _port = "5437";
         private readonly string _username = "postgres";
@@ -11,19 +11,19 @@ public class Database
         private readonly string _database = "hello_holiday";
 
         private NpgsqlDataSource _connection;
-
-        // metod som hämtar anslutningen
+        
+        // method for getting the connection
         public NpgsqlDataSource Connection()
         {
             return _connection;
         }
     
-        // koppla upp till databasen (i constructorn)
+        // connects to the database (in the constructor)
         public Database()
         {
-            // bygg en anslutningssträng (Adress och inloggning till databasen) 
+            // builds the connection string (address and login for the database)
             string connectionString = $"Host={_host};Port={_port};Username={_username};Password={_password};Database={_database}";
-            // använd den för att hämta en anslutning
+            // used for getting the connection
             _connection = NpgsqlDataSource.Create(connectionString);
         }
     }
