@@ -82,6 +82,44 @@ public class Query
         }
     }
 
+    public async Task<Customer> GetCustomer(string email)
+    {
+        var query = "SELECT * FROM customer " +
+                    "WHERE email = $1";
+
+        await using (var cmd = _db.CreateCommand(query))
+        {
+            cmd.Parameters.AddWithValue(email);
+            await using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    int customerId = reader.GetInt32(0);
+                    string customerFirstName = reader.GetString(1);
+                    string customerLastName = reader.GetString(2);
+                    string customerEmail = reader.GetString(3);
+                    string customerPhone = reader.GetString(4);
+                    DateTime customerBirth = reader.GetDateTime(5);
+                    //Console.WriteLine($"id: {reader.GetInt32(0)} \t name: {reader.GetString(1)} \t email: {reader.GetString(3)}");
+                    Console.WriteLine(
+                        $"{customerId}, {customerFirstName}, {customerFirstName}, {customerEmail}, {customerPhone}, {customerBirth}");
+                    return new Customer
+                    {
+                        id = customerId,
+                        firstname = customerFirstName,
+                        lastname = customerLastName,
+                        email = customerEmail,
+                        phone = customerPhone,
+                        birth = customerBirth
+                    };
+                }
+            }
+        }
+
+        return null;
+    }
+
+
     // Customer menu metoder
     public async Task<bool> ValidateEmail(String email)
     {
@@ -139,11 +177,11 @@ public class Query
         }
     }
 
-    public async Task DeleteCustomer(String email)
+    public async Task DeleteCustomer(int id)
     {
-        await using (var cmd = _db.CreateCommand("DELETE FROM customer WHERE email = $1"))
+        await using (var cmd = _db.CreateCommand("DELETE FROM customer WHERE id = $1"))
         {
-            cmd.Parameters.AddWithValue(email);
+            cmd.Parameters.AddWithValue(id);
             await cmd.ExecuteNonQueryAsync();
         }
     }
@@ -156,15 +194,6 @@ public class Query
     {
         try
         {
-            //storing bool values:
-            var isPool = Boolean.Parse(preferences.Pool);
-            var isEntertainment = Boolean.Parse(preferences.Entertainment);
-            var isKidsClub = Boolean.Parse(preferences.KidsClub);
-            var isRestaurant = Boolean.Parse(preferences.Restaurant);
-            
-            //storing ORDER BY preference of price or review            
-            var preferenceOrder = preferences.Preference;
-            
             //storing query
             var query = "SELECT * FROM booking_master " +
                         "WHERE (booking_end_date IS NULL OR booking_start_date IS NULL OR " +
@@ -172,67 +201,64 @@ public class Query
                         "AND (beach_proximity <= $3)" +
                         "AND (city_proximity <= $4)" +
                         "AND (size = $5)";
-                        
+
             // Handle Booleans to display both values if false:
-            if (isPool) // if isPool is true
+            if (preferences.Pool) // if isPool is true
             {
-                query += "AND (pool = $3)"; //add this line to query
+                query += "AND (pool = $6)"; //add this line to query
             }
-            if (isEntertainment) 
+
+            if (preferences.Entertainment)
             {
-                query += "AND (entertainment = $7)"; 
+                query += "AND (entertainment = $7)";
             }
-            if (isKidsClub) 
+
+            if (preferences.KidsClub)
             {
-                query += "AND (kidsclub = $8)"; 
+                query += "AND (kidsclub = $8)";
             }
-            if (isRestaurant) 
+
+            if (preferences.Restaurant)
             {
-                query += "AND (restaurant = $9)"; 
+                query += "AND (restaurant = $9)";
             }
-                
-                
-                //Adds an ORDER BY after all booleans are handled
-                if (preferenceOrder.Contains("price"))
-                {
-                    query +=  " ORDER BY price"; // working
-                }
-                else if (preferenceOrder.Contains("rating"))
-                {
-                    query += " ORDER BY average_rating"; // NOT WORKING
-                }
-            
+
+
+            //Adds an ORDER BY after all booleans are handled
+            if (preferences.Preference.Contains("price"))
+            {
+                query += " ORDER BY (price)"; // working
+            }
+            else if (preferences.Preference.Contains("rating"))
+            {
+                query += " ORDER BY (average_rating) DESC"; // NOT WORKING
+            }
+
             //query passed into _db.CreateCommand
             await using (var cmd = _db.CreateCommand(query))
             {
-                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckOutDate));       // $1
-                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckInDate));        // $2
+                cmd.Parameters.AddWithValue(preferences.CheckOutDate); // $1
+                cmd.Parameters.AddWithValue(preferences.CheckInDate); // $2
+                cmd.Parameters.AddWithValue(preferences.DistanceToBeach); // $3
+                cmd.Parameters.AddWithValue(preferences.DistanceToCityCentre); // $4
+                cmd.Parameters.AddWithValue(preferences.RoomSize); // $5
+                cmd.Parameters.AddWithValue(preferences.Pool); // $6  
+                cmd.Parameters.AddWithValue(preferences.Entertainment); // $7  
+                cmd.Parameters.AddWithValue(preferences.KidsClub); // $8  
+                cmd.Parameters.AddWithValue(preferences.Restaurant); // $9  
+                cmd.Parameters.AddWithValue(preferences.Preference); // $10
                 
-                cmd.Parameters.AddWithValue(Int32.Parse(preferences.DistanceToBeach));       // $3
-                cmd.Parameters.AddWithValue(Int32.Parse(preferences.DistanceToCityCentre));  // $4
-                cmd.Parameters.AddWithValue(Int32.Parse(preferences.RoomSize));              // $5
-                
-                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Pool));                // $6  
-                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Entertainment));       // $7  
-                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.KidsClub));            // $8  
-                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Restaurant));          // $9  
-
-
-                cmd.Parameters.AddWithValue(preferences.Preference);                         // $10
-                
-               
                 await using (var reader = await cmd.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
                     {
                         Console.WriteLine(
-                           //Validation that both boolean values are checked:
+                            //Validation that both boolean values are checked:
                             $"pool: {reader.GetBoolean(6)} \t " +
                             $"entertainment: {reader.GetBoolean(7)} \t " +
                             $"kidsclub: {reader.GetBoolean(8)} \t " +
                             $"restaurant: {reader.GetBoolean(9)} \t " +
                             //Validation that both boolean values are checked^
-                            
                             $"room_id: {reader.GetInt32(0)} \t " +
                             $"hotel_id: {reader.GetInt32(1)} \t " +
                             $"price: {reader.GetInt32(2)} \t " +
@@ -243,97 +269,98 @@ public class Query
                     }
                 }
             }
-
         }
         catch (Exception e)
         {
             Console.WriteLine($"Something went wrong with the inputs.. {e.Message}");
         }
     }
-    
-    
+
+
     // List available rooms within two dates,  based on preferences
     public async Task ListAvaliableRooms(BookingPreferences preferences)
     {
         try
         {
             //storing bool values:
-            var isPool = Boolean.Parse(preferences.Pool);
-            var isEntertainment = Boolean.Parse(preferences.Entertainment);
-            var isKidsClub = Boolean.Parse(preferences.KidsClub);
-            var isRestaurant = Boolean.Parse(preferences.Restaurant);
-            
+            var isPool = preferences.Pool;
+            var isEntertainment = preferences.Entertainment;
+            var isKidsClub = preferences.KidsClub;
+            var isRestaurant = preferences.Restaurant;
+
             //storing ORDER BY preference of price or review            
             var preferenceOrder = preferences.Preference;
-            
+
             //storing query
             var query = "SELECT * FROM booking_master " +
                         "WHERE (booking_start_date <= $2 AND booking_end_date >= $1) " +
                         "AND (beach_proximity <= $3)" +
                         "AND (city_proximity <= $4)" +
                         "AND (size = $5)";
-                        
+
             // Handle Booleans to display both values if false:
             if (isPool) // if isPool is true
             {
                 query += "AND (pool = $6)"; //add this line to query
             }
-            if (isEntertainment) 
+
+            if (isEntertainment)
             {
-                query += "AND (entertainment = $7)"; 
+                query += "AND (entertainment = $7)";
             }
-            if (isKidsClub) 
+
+            if (isKidsClub)
             {
-                query += "AND (kidsclub = $8)"; 
+                query += "AND (kidsclub = $8)";
             }
-            if (isRestaurant) 
+
+            if (isRestaurant)
             {
-                query += "AND (restaurant = $9)"; 
+                query += "AND (restaurant = $9)";
             }
-                
-                
-                //Adds an ORDER BY after all booleans are handled
-                if (preferenceOrder.Contains("price"))
-                {
-                    query +=  " ORDER BY price"; // working
-                }
-                else if (preferenceOrder.Contains("average_rating"))
-                {
-                    query += " ORDER BY rating"; // NOT WORKING
-                }
-            
+
+
+            //Adds an ORDER BY after all booleans are handled
+            if (preferenceOrder.Contains("price"))
+            {
+                query += " ORDER BY price"; // working
+            }
+            else if (preferenceOrder.Contains("average_rating"))
+            {
+                query += " ORDER BY rating"; // NOT WORKING
+            }
+
             //query passed into _db.CreateCommand
             await using (var cmd = _db.CreateCommand(query))
             {
-                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckOutDate));       // $1
-                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckInDate));        // $2
-                
-                cmd.Parameters.AddWithValue(Int32.Parse(preferences.DistanceToBeach));       // $3
-                cmd.Parameters.AddWithValue(Int32.Parse(preferences.DistanceToCityCentre));  // $4
-                cmd.Parameters.AddWithValue(Int32.Parse(preferences.RoomSize));              // $5
-                
-                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Pool));                // $6  
-                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Entertainment));       // $7  
-                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.KidsClub));            // $8  
-                cmd.Parameters.AddWithValue(Boolean.Parse(preferences.Restaurant));          // $9  
+                cmd.Parameters.AddWithValue(preferences.CheckOutDate); // $1
+                cmd.Parameters.AddWithValue(preferences.CheckInDate); // $2
+
+                cmd.Parameters.AddWithValue(preferences.DistanceToBeach); // $3
+                cmd.Parameters.AddWithValue(preferences.DistanceToCityCentre); // $4
+                cmd.Parameters.AddWithValue(preferences.RoomSize); // $5
+
+                cmd.Parameters.AddWithValue(preferences.Pool); // $6  
+                cmd.Parameters.AddWithValue(preferences.Entertainment); // $7  
+                cmd.Parameters.AddWithValue(preferences.KidsClub); // $8  
+                cmd.Parameters.AddWithValue(preferences.Restaurant); // $9  
 
 
-                cmd.Parameters.AddWithValue(preferences.Preference);                         // $10
-                
-               
+                cmd.Parameters.AddWithValue(preferences.Preference); // $10
+
+
                 await using (var reader = await cmd.ExecuteReaderAsync())
                 {
                     Console.WriteLine("Available Rooms:");
                     while (await reader.ReadAsync())
                     {
                         Console.WriteLine(
-                           //Validation that both boolean values are checked:
+                            //Validation that both boolean values are checked:
                             $"pool: {reader.GetBoolean(6)} \t " +
                             $"entertainment: {reader.GetBoolean(7)} \t " +
                             $"kidsclub: {reader.GetBoolean(8)} \t " +
                             $"restaurant: {reader.GetBoolean(9)} \t " +
                             //Validation that both boolean values are checked^
-                            
                             $"room_id: {reader.GetInt32(0)} \t " +
                             $"hotel_id: {reader.GetInt32(1)} \t " +
                             $"price: {reader.GetInt32(2)} \t " +
@@ -351,15 +378,15 @@ public class Query
             Console.WriteLine($"Something went wrong with the inputs.. {e.Message}");
         }
     }
-    
+
     // Ask follow-up questions:
     // Would you like to book a room based on your search?
-     // > Enter the room id of your choice
+    // > Enter the room id of your choice
     // Would you like to add an extra bed for 30$?
     // > y/n
     // Would you like to include breakfast?
     // > y/n
-   
+
     // Booking Method
 
     public async Task<int?> GetBookingId()
@@ -398,8 +425,8 @@ public class Query
 
                 cmd.Parameters.AddWithValue(customerId);                               // $1
                 //cmd.Parameters.AddWithValue(roomId);                                   // $2
-                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckInDate));  // $3
-                cmd.Parameters.AddWithValue(DateTime.Parse(preferences.CheckOutDate)); // $4
+                cmd.Parameters.AddWithValue(preferences.CheckInDate);  // $3
+                cmd.Parameters.AddWithValue(preferences.CheckOutDate); // $4
                 cmd.Parameters.AddWithValue(extraBed);     // $5
                 cmd.Parameters.AddWithValue(dailyBreakfast);     // $6
                 
@@ -433,9 +460,3 @@ public class Query
     */
     
 }
-    
-    
-
-
-
-

@@ -1,6 +1,6 @@
 namespace HelloHoliday;
 
-public class BookingMenu
+public class BookingMenu : Menu
 {
     Query _query;
     MainMenu _mainMenu;
@@ -29,9 +29,7 @@ public class BookingMenu
 
     public async Task AskUser()
     {
-        var response = Console.ReadLine();
-        if (response is not null)
-        {
+        var response = GetInputAsString();
             switch (response)
             {
                 case "1":
@@ -47,57 +45,45 @@ public class BookingMenu
                     await DeleteBooking();
                     break;
             }
-        }
     }
+    
 
     public async Task SearchRooms()
     {
         Console.WriteLine("+------Welcome---to---Booking-------+");
         Console.WriteLine("| When would you like to check in?");
         Console.WriteLine("| (Please use format 'YYYY-MM-DD')");
-        Console.Write("> ");
-        string? checkIn = Console.ReadLine();
+        DateTime checkIn = GetInputAsDate();
 
         Console.WriteLine("| When will you check out?");
-        Console.Write("> ");
-        string? checkOut = Console.ReadLine();
+        DateTime checkOut = GetInputAsDate();
 
         Console.WriteLine("| What kind of room do you need?");
         Console.WriteLine("| (Single, Double, Triple or Quad?)");
-        Console.Write("> ");
-        string? roomSize = Console.ReadLine()?.ToLower();
+        int roomSize = GetInputAsInt();
 
         Console.WriteLine("| Do you want a pool? (true/false)");
-        Console.Write("> ");
-        string? pool = Console.ReadLine()?.ToLower();
+        bool pool = GetInputAsBool();
 
         Console.WriteLine("| Should there be entertainment options? (true/false)");
-        Console.Write("> ");
-        string? entertainment = Console.ReadLine()?.ToLower();
+        bool entertainment = GetInputAsBool();
 
         Console.WriteLine("| Is a kid's club important? (true/false)");
-        Console.Write("> ");
-        string? kidsClub = Console.ReadLine()?.ToLower();
+        bool kidsClub = GetInputAsBool();
 
         Console.WriteLine("| Do you want an on-site restaurant? (true/false)");
-        Console.Write("> ");
-        string? restaurant = Console.ReadLine()?.ToLower();
+        bool restaurant = GetInputAsBool();
 
         Console.WriteLine("| How far from the beach is okay (in km)");
-        Console.Write("> ");
-        string? beach = Console.ReadLine();
+        int beach = GetInputAsInt();
 
         Console.WriteLine("| How far from the city-centre is okay (in km)");
-        Console.Write("> ");
-        string? cityCentre = Console.ReadLine();
+        int cityCentre = GetInputAsInt();
 
         Console.WriteLine("| What matters more to you: ");
         Console.WriteLine("| Great review or great price?");
-        Console.Write("> ");
-        string? reviewOrPrice = Console.ReadLine()?.ToLower();
+        string? reviewOrPrice = GetInputAsString();
 
-        
-        
         //add check that inputs are not null
         _bookingPreferences = new BookingPreferences
         {
@@ -142,5 +128,3 @@ public class BookingMenu
 
 
 }
-
-
