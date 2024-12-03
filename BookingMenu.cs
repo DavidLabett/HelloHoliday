@@ -4,6 +4,8 @@ public class BookingMenu : Menu
 {
     Query _query;
     MainMenu _mainMenu;
+    Customer _customer;
+    CustomerMenu _customerMenu;
 
     public BookingMenu(Query query, MainMenu mainMenu)
     {
@@ -13,8 +15,25 @@ public class BookingMenu : Menu
 
     public async Task Menu()
     {
-        PrintBookingMenu();
-        await AskUser();
+        Console.WriteLine("What's your Email?");
+        var email = GetInputAsString();
+
+        //handles email input
+        var isValid = await _query.ValidateEmail(email);
+        if (isValid)
+        {
+            Console.WriteLine("Email is valid.");
+            _customer = await _query.GetCustomer(email);
+            PrintBookingMenu();
+            await AskUser();
+        }
+        else
+        {
+            Console.WriteLine("Email not found.");
+            Console.WriteLine("Let's get you registered!");
+            await _customerMenu.RegisterCustomer(email);
+        }
+        
     }
 
     public void PrintBookingMenu()
@@ -24,6 +43,7 @@ public class BookingMenu : Menu
         Console.WriteLine("2. Make booking");
         Console.WriteLine("3. Edit booking");
         Console.WriteLine("4. Delete booking");
+        Console.WriteLine("0. Return to Main-menu");
     }
 
     public async Task AskUser()
@@ -40,6 +60,9 @@ public class BookingMenu : Menu
             case "3":
                 break;
             case "4":
+                break;
+            case "0":
+                await _mainMenu.Menu();
                 break;
         }
     }
