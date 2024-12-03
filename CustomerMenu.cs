@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices.JavaScript;
-
 namespace HelloHoliday;
 
 public class CustomerMenu : Menu
@@ -52,7 +50,7 @@ public class CustomerMenu : Menu
         switch (response)
         {
             case "1":
-                MyBookings();
+                await MyBookings();
                 break;
             case "2":
                 await ModifyCustomer();
@@ -68,7 +66,6 @@ public class CustomerMenu : Menu
 
     public async Task RegisterCustomer(string email)
     {
-        //Console.Clear();
         Console.WriteLine("Please fill in your:");
         Console.WriteLine("First name");
         var firstName = GetInputAsString();
