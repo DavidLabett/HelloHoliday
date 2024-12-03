@@ -5,6 +5,8 @@ public class BookingMenu : Menu
     Query _query;
     MainMenu _mainMenu;
     BookingPreferences _bookingPreferences;
+    Customer _customer;
+    CustomerMenu _customerMenu;
 
     public BookingMenu(Query query, MainMenu mainMenu)
     {
@@ -14,8 +16,25 @@ public class BookingMenu : Menu
 
     public async Task Menu()
     {
-        PrintBookingMenu();
-        await AskUser();
+        Console.WriteLine("What's your Email?");
+        var email = GetInputAsString();
+
+        //handles email input
+        var isValid = await _query.ValidateEmail(email);
+        if (isValid)
+        {
+            Console.WriteLine("Email is valid.");
+            _customer = await _query.GetCustomer(email);
+            PrintBookingMenu();
+            await AskUser();
+        }
+        else
+        {
+            Console.WriteLine("Email not found.");
+            Console.WriteLine("Let's get you registered!");
+            await _customerMenu.RegisterCustomer(email);
+        }
+        
     }
 
     public void PrintBookingMenu()
@@ -25,26 +44,31 @@ public class BookingMenu : Menu
         Console.WriteLine("2. Make booking");
         Console.WriteLine("3. Edit booking");
         Console.WriteLine("4. Delete booking");
+        Console.WriteLine("0. Return to Main-menu");
     }
 
     public async Task AskUser()
     {
         var response = GetInputAsString();
-            switch (response)
-            {
-                case "1":
-                    await SearchRooms();
-                    break;
-                case "2":
-                    await MakeBooking();
-                    break;
-                case "3":
-                    await EditBooking();
-                    break;
-                case "4":
-                    await DeleteBooking();
-                    break;
-            }
+
+        switch (response)
+        {
+            case "1":
+                await SearchRooms();
+                break;
+            case "2":
+                await MakeBooking();
+                break;
+            case "3":
+                await EditBooking();
+                break;
+            case "4":
+                await DeleteBooking();
+                break;
+            case "0":
+                await _mainMenu.Menu();
+                break;
+        }
     }
     
 
@@ -99,7 +123,6 @@ public class BookingMenu : Menu
             Preference = reviewOrPrice
         };
         await _query.ListBookingPref(_bookingPreferences);
-        MakeBooking();
         await Menu();
     }
 

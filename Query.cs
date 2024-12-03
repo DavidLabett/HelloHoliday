@@ -101,8 +101,8 @@ public class Query
                     string customerPhone = reader.GetString(4);
                     DateTime customerBirth = reader.GetDateTime(5);
                     //Console.WriteLine($"id: {reader.GetInt32(0)} \t name: {reader.GetString(1)} \t email: {reader.GetString(3)}");
-                    Console.WriteLine(
-                        $"{customerId}, {customerFirstName}, {customerFirstName}, {customerEmail}, {customerPhone}, {customerBirth}");
+                    //Console.WriteLine(
+                        //$"{customerId}, {customerFirstName}, {customerFirstName}, {customerEmail}, {customerPhone}, {customerBirth}");
                     return new Customer
                     {
                         id = customerId,

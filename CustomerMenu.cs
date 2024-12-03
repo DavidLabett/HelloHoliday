@@ -66,7 +66,7 @@ public class CustomerMenu : Menu
         }
     }
 
-    private async Task RegisterCustomer(string email)
+    public async Task RegisterCustomer(string email)
     {
         //Console.Clear();
         Console.WriteLine("Please fill in your:");

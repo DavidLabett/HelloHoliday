@@ -119,3 +119,60 @@ CREATE TABLE booking_x_rooms(
             REFERENCES room(id)
 );
 
+-- creating a master view for all bookings
+CREATE VIEW booking_master AS
+SELECT
+    r.id AS room_id,
+    r.hotel_id,
+    r.price,
+    r.description,
+    r.balcony,
+    r.size,
+    h.pool,
+    h.entertainment,
+    h.kidsclub,
+    h.restaurant,
+    h.beach_proximity,
+    h.city_proximity,
+    r2.average_rating,
+    b.start_date AS booking_start_date,
+    b.end_date AS booking_end_date
+FROM
+    room r
+        LEFT JOIN public.booking_x_rooms bxr ON r.id = bxr.room_id
+        LEFT JOIN public.booking b ON bxr.booking_id = b.id
+        JOIN hotel h ON h.id = r.hotel_id
+        JOIN 
+        (
+        SELECT ROUND(AVG(rating), 1) AS average_rating, hotel_id
+        FROM rating
+        GROUP BY hotel_id
+        ) r2 ON r2.hotel_id = h.id
+
+
+-- creating a master view for all rooms
+CREATE VIEW room_master AS
+SELECT
+    r.id AS room_id,
+    r.hotel_id,
+    r.price,
+    r.description,
+    r.balcony,
+    r.size,
+    h.pool,
+    h.entertainment,
+    h.kidsclub,
+    h.restaurant,
+    h.beach_proximity,
+    h.city_proximity,
+    r2.average_rating
+FROM
+    room r
+        JOIN hotel h ON h.id = r.hotel_id
+        JOIN 
+        (
+        SELECT ROUND(AVG(rating), 1) AS average_rating, hotel_id
+        FROM rating
+        GROUP BY hotel_id
+        ) r2 ON r2.hotel_id = h.id
+
