@@ -16,29 +16,34 @@ public class CustomerMenu : Menu
 
     public async Task Menu()
     {
-        Console.WriteLine("What's your Email?");
+        Console.Write("| Please enter your email: ");
         var email = GetInputAsString();
 
         //handles email input
         var isValid = await _query.ValidateEmail(email);
         if (isValid)
         {
-            Console.WriteLine("Email is valid.");
+            
             _customer = await _query.GetCustomer(email);
+            Console.Clear();
+            Console.WriteLine($"Welcome back {_customer.firstname} {_customer.lastname}!");
             PrintCustomerMenu();
             await AskUser();
         }
         else
         {
-            Console.WriteLine("Email not found.");
-            Console.WriteLine("Let's get you registered!");
+            Console.WriteLine("+-----------------------------------+");
+            Console.WriteLine("| Email not found.                  |");
+            Console.WriteLine("| Let's get you registered!         |");
+            Console.WriteLine("+-----------------------------------+");
+            Console.WriteLine("[Press any button to continue]");
+            Console.ReadLine(); //pause
             await RegisterCustomer(email);
         }
     }
 
     private void PrintCustomerMenu()
     {
-        Console.Clear();
         Console.WriteLine("+=========================+");
         Console.WriteLine("|      CUSTOMER MENU      |");
         Console.WriteLine("+=========================+");
@@ -163,7 +168,7 @@ public class CustomerMenu : Menu
     private async Task DeleteCustomer()
     {
         await _query.DeleteCustomer(_customer.id);
-        Console.WriteLine("Your account has successfully been deleted");
+        Console.WriteLine("| Your account has successfully been deleted |");
         Console.WriteLine("[Press any button to continue]");
         Console.ReadLine();
         await _mainMenu.Menu();

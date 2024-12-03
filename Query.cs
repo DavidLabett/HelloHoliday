@@ -135,12 +135,10 @@ public class Query
                     //Console.WriteLine($"dbEmail: {reader.GetString(0)} \t email: {email}");
                     if (email == dbEmail)
                     {
-                        Console.WriteLine("Welcome!");
                         return true;
                     }
                     else
                     {
-                        Console.WriteLine("Invalid email");
                         return false;
                     }
                 }
