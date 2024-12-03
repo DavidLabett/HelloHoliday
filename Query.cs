@@ -478,14 +478,7 @@ public class Query
         }
     }
 
-    // Ask follow-up questions:
-    // Would you like to book a room based on your search?
-    // > Enter the room id of your choice
-    // Would you like to add an extra bed for 30$?
-    // > y/n
-    // Would you like to include breakfast?
-    // > y/n
-
+    
     // Booking Method
 
     public async Task<int?> GetBookingId()
@@ -580,4 +573,16 @@ public class Query
             Console.WriteLine($"Error: {e.Message}");
         }
     }
+
+
+    public async Task MyBookings(int Id)
+    {
+        await using (var cmd = _db.CreateCommand("SELECT * FROM booking WHERE id = $1"))
+        {
+            cmd.Parameters.AddWithValue(id);
+            await cmd.ExecuteNonQueryAsync();
+        }
+    }
+    
+    
 }

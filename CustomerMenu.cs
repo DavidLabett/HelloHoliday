@@ -112,5 +112,6 @@ public class CustomerMenu : Menu
 
     private void MyBookings()
     {
+        await _query.MyBookings(_customer.id);
     }
 }
