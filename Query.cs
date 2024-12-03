@@ -278,6 +278,19 @@ public class Query
 
     public async Task ListAvailableRooms(BookingPreferences preferences)
     {
+        /*
+        select *
+            from room_master 
+            except 
+        select room_id, hotel_id, price, description, balcony, 
+            size, pool, entertainment, kidsclub, restaurant, 
+            beach_proximity, city_proximity, average_rating
+        from booking_master
+        where booking_start_date between '2024-12-1' and '2024-12-10'
+        and booking_end_date between '2024-12-1' and '2024-12-10'
+        order by price;
+        */
+        
         try
         {
             //storing query
