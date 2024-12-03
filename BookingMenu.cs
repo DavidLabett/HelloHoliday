@@ -4,7 +4,7 @@ public class BookingMenu : Menu
 {
     Query _query;
     MainMenu _mainMenu;
-    BookingPreferences? _bookingPreferences = null;
+    BookingPreferences? _bookingPreferences;
     Customer _customer;
     CustomerMenu _customerMenu;
 
@@ -34,7 +34,6 @@ public class BookingMenu : Menu
             Console.WriteLine("Let's get you registered!");
             await _customerMenu.RegisterCustomer(email);
         }
-        
     }
 
     public void PrintBookingMenu()
@@ -57,7 +56,7 @@ public class BookingMenu : Menu
                 await SearchRooms();
                 break;
             case "2":
-                // await MakeBooking(); // need customer id
+                // await MakeBooking();
                 break;
             case "3":
                 await EditBooking();
@@ -71,7 +70,6 @@ public class BookingMenu : Menu
         }
     }
     
-
     public async Task SearchRooms()
     {
         Console.WriteLine("+------Welcome---to---Booking-------+");
@@ -106,9 +104,8 @@ public class BookingMenu : Menu
 
         Console.WriteLine("| What matters more to you: ");
         Console.WriteLine("| Great review or great price?");
-        string? reviewOrPrice = GetInputAsString();
+        string reviewOrPrice = GetInputAsString();
 
-        //add check that inputs are not null
         _bookingPreferences = new BookingPreferences
         {
             CheckInDate = checkIn,
@@ -143,7 +140,6 @@ public class BookingMenu : Menu
             bool dailyBreakfast = GetInputAsBool();
             await _query.BookRoom(_bookingPreferences, customerId, roomId, extraBed, dailyBreakfast);
         }
-
     }
 
     public async Task EditBooking()
@@ -159,6 +155,4 @@ public class BookingMenu : Menu
         await _query.DeleteBooking(bookingId);
         Console.WriteLine("Your booking has successfully been deleted");
     }
-
-
 }
