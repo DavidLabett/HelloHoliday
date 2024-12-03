@@ -4,7 +4,7 @@ public class BookingMenu : Menu
 {
     Query _query;
     MainMenu _mainMenu;
-    BookingPreferences _bookingPreferences;
+    BookingPreferences? _bookingPreferences = null;
     Customer _customer;
     CustomerMenu _customerMenu;
 
@@ -129,14 +129,21 @@ public class BookingMenu : Menu
 
     public async Task MakeBooking(int customerId)
     {
-        Console.WriteLine("Enter room id to make booking");
-        int roomId = int.Parse(Console.ReadLine());
-        Console.WriteLine("Would you like to add an extra bed for 30$? (true/false)");
-        bool extraBed = Boolean.Parse(Console.ReadLine());
-        Console.WriteLine("Would you like to include breakfast? (true/false)");
-        bool dailyBreakfast = Boolean.Parse(Console.ReadLine());
-        await _query.BookRoom(_bookingPreferences, customerId, roomId, extraBed, dailyBreakfast);
-        
+        if (_bookingPreferences is null)
+        {
+            await SearchRooms();
+        }
+        else
+        {
+            Console.WriteLine("Enter room id to make booking");
+            int roomId = GetInputAsInt();
+            Console.WriteLine("Would you like to add an extra bed for 30$? (true/false)");
+            bool extraBed = GetInputAsBool();
+            Console.WriteLine("Would you like to include breakfast? (true/false)");
+            bool dailyBreakfast = GetInputAsBool();
+            await _query.BookRoom(_bookingPreferences, customerId, roomId, extraBed, dailyBreakfast);
+        }
+
     }
 
     public async Task EditBooking()
