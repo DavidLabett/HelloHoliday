@@ -545,10 +545,36 @@ public class Query
     }
     */
 
-    public async Task DeleteBooking(int bookingId)
+    public async Task DeleteBooking(int bookingId, int customerId)
     {
         try
         {
+            // Check if the booking belongs to input bookingId
+            var idCheckingQuery = "SELECT customer_id FROM booking WHERE id = $1";
+
+            await using (var cmd = _db.CreateCommand(idCheckingQuery))
+            {
+                cmd.Parameters.AddWithValue(bookingId); // $1
+                await using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        int dbCustomerId = reader.GetInt32(0); // store customer_id
+
+                        if (dbCustomerId != customerId) // check against datavbase entry
+                        {
+                            Console.WriteLine("+-----------------------------------+");
+                            Console.WriteLine("| Your customer ID is not related   |");
+                            Console.WriteLine("| to the provided booking ID.       |");
+                            Console.WriteLine("+-----------------------------------+");
+                            Console.WriteLine("[Press any button to continue]");
+                            Console.ReadLine(); // Pause
+                            return;
+                        }
+                    }
+                }
+            }
+
             var bookingxroomsQuery = "DELETE from booking_x_rooms where id = $1";
             var bookingQuery = "DELETE from booking where id = $1";
 

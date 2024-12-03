@@ -62,13 +62,13 @@ public class BookingMenu : Menu
                 await SearchRooms();
                 break;
             case "2":
-                // await MakeBooking(); // need customer id
+                 await MakeBooking(_customer.id); // need customer id
                 break;
             case "3":
                 await EditBooking();
                 break;
             case "4":
-                await DeleteBooking();
+                await DeleteBooking(_customer.id);
                 break;
             case "0":
                 await _mainMenu.Menu();
@@ -219,7 +219,7 @@ Console.WriteLine("+===================================+");
         
     }
 
-    public async Task DeleteBooking()
+    public async Task DeleteBooking(int customerId)
     {
         // My booking metod här?
         Console.Clear();
@@ -237,7 +237,7 @@ Console.WriteLine("+===================================+");
         Console.WriteLine("| Deleting your booking, please wait...");
         Console.WriteLine("+-----------------------------------+");
 
-        await _query.DeleteBooking(bookingId);
+        await _query.DeleteBooking(bookingId, customerId);
 
         // confirmatino message
         Console.WriteLine("+===================================+");
