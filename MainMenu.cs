@@ -19,10 +19,15 @@ public class MainMenu : Menu
 
     public void PrintMenu()
     {
-        Console.WriteLine("Choose option");
-        Console.WriteLine("1. Customer");
-        Console.WriteLine("2. Booking");
-        Console.WriteLine("0. Quit");
+        Console.Clear();
+        Console.WriteLine("+=========================+");
+        Console.WriteLine("|       MAIN MENU         |");
+        Console.WriteLine("+=========================+");
+        Console.WriteLine("| 1. Customer Menu        |");
+        Console.WriteLine("| 2. Booking Menu         |");
+        Console.WriteLine("| 0. Quit                 |");
+        Console.WriteLine("+=========================+");
+        Console.WriteLine("| Select an option:       |");
     }
 
     public async Task AskUser()

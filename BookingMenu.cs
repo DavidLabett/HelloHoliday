@@ -39,12 +39,17 @@ public class BookingMenu : Menu
 
     public void PrintBookingMenu()
     {
-        Console.WriteLine("### Booking Menu");
-        Console.WriteLine("1. Search available rooms");
-        Console.WriteLine("2. Make booking");
-        Console.WriteLine("3. Edit booking");
-        Console.WriteLine("4. Delete booking");
-        Console.WriteLine("0. Return to Main-menu");
+        Console.Clear();
+        Console.WriteLine("+===========================+");
+        Console.WriteLine("|       BOOKING MENU        |");
+        Console.WriteLine("+===========================+");
+        Console.WriteLine("| 1. Search Available Rooms |");
+        Console.WriteLine("| 2. Make a Booking         |");
+        Console.WriteLine("| 3. Edit a Booking         |");
+        Console.WriteLine("| 4. Delete a Booking       |");
+        Console.WriteLine("| 0. Return to Main Menu    |");
+        Console.WriteLine("+===========================+");
+        Console.WriteLine("| Select an option:         |");
     }
 
     public async Task AskUser()
@@ -74,41 +79,72 @@ public class BookingMenu : Menu
 
     public async Task SearchRooms()
     {
-        Console.WriteLine("+------Welcome---to---Booking-------+");
-        Console.WriteLine("| When would you like to check in?");
-        Console.WriteLine("| (Please use format 'YYYY-MM-DD')");
-        DateTime checkIn = GetInputAsDate();
+        Console.Clear();
+Console.WriteLine("+===================================+");
+Console.WriteLine("|         ROOM BOOKING FORM         |");
+Console.WriteLine("+===================================+");
+Console.WriteLine("| Please fill in the following info:|");
+Console.WriteLine("+-----------------------------------+");
 
-        Console.WriteLine("| When will you check out?");
-        DateTime checkOut = GetInputAsDate();
+// Check-in date
+Console.WriteLine("| When would you like to check in?  |");
+Console.WriteLine("| (Format: YYYY-MM-DD)              |");
+Console.WriteLine("+-----------------------------------+");
+DateTime checkIn = GetInputAsDate();
 
-        Console.WriteLine("| What kind of room do you need?");
-        Console.WriteLine("| (Single, Double, Triple or Quad?)");
-        int roomSize = GetInputAsInt();
+// Check-out date
+Console.WriteLine("+-----------------------------------+");
+Console.WriteLine("| When will you check out?          |");
+Console.WriteLine("| (Format: YYYY-MM-DD)              |");
+Console.WriteLine("+-----------------------------------+");
+DateTime checkOut = GetInputAsDate();
 
-        Console.WriteLine("| Do you want a pool? (true/false)");
-        bool pool = GetInputAsBool();
+// Room type
+Console.WriteLine("+-----------------------------------+");
+Console.WriteLine("| What type of room do you need?    |");
+Console.WriteLine("| (Single, Double, Triple, Quad)    |");
+Console.WriteLine("+-----------------------------------+");
+int roomSize = GetInputAsInt();
 
-        Console.WriteLine("| Should there be entertainment options? (true/false)");
-        bool entertainment = GetInputAsBool();
+// bools
+Console.WriteLine("+-----------------------------------+");
+Console.WriteLine("| Do you want a pool? (true/false)  |");
+bool pool = GetInputAsBool();
 
-        Console.WriteLine("| Is a kid's club important? (true/false)");
-        bool kidsClub = GetInputAsBool();
+Console.WriteLine("+-----------------------------------+");
+Console.WriteLine("| Entertainment options? (true/false)|");
+bool entertainment = GetInputAsBool();
 
-        Console.WriteLine("| Do you want an on-site restaurant? (true/false)");
-        bool restaurant = GetInputAsBool();
+Console.WriteLine("+-----------------------------------+");
+Console.WriteLine("| Is a kid's club important? (true/false)|");
+bool kidsClub = GetInputAsBool();
 
-        Console.WriteLine("| How far from the beach is okay (in km)");
-        int beach = GetInputAsInt();
+Console.WriteLine("+-----------------------------------+");
+Console.WriteLine("| On-site restaurant? (true/false) |");
+bool restaurant = GetInputAsBool();
 
-        Console.WriteLine("| How far from the city-centre is okay (in km)");
-        int cityCentre = GetInputAsInt();
+// Proximity beach and city
+Console.WriteLine("+-----------------------------------+");
+Console.WriteLine("| Max distance from the beach (km):|");
+int beach = GetInputAsInt();
 
-        Console.WriteLine("| What matters more to you: ");
-        Console.WriteLine("| Great review or great price?");
-        string? reviewOrPrice = GetInputAsString();
+Console.WriteLine("+-----------------------------------+");
+Console.WriteLine("| Max distance from city centre (km):|");
+int cityCentre = GetInputAsInt();
 
-        //add check that inputs are not null
+// Preference review or price
+Console.WriteLine("+-----------------------------------+");
+Console.WriteLine("| What matters more:                |");
+Console.WriteLine("| - Great reviews                   |");
+Console.WriteLine("| - Great price                     |");
+Console.WriteLine("+-----------------------------------+");
+string? reviewOrPrice = GetInputAsString();
+
+// Confirmation message
+Console.WriteLine("+===================================+");
+Console.WriteLine("| Thank you! Your preferences have  |");
+Console.WriteLine("| been recorded. Searching rooms... |");
+Console.WriteLine("+===================================+");
         _bookingPreferences = new BookingPreferences
         {
             CheckInDate = checkIn,
@@ -135,13 +171,45 @@ public class BookingMenu : Menu
         }
         else
         {
-            Console.WriteLine("Enter room id to make booking");
+            Console.Clear();
+            Console.WriteLine("+===================================+");
+            Console.WriteLine("|        FINALIZE YOUR BOOKING      |");
+            Console.WriteLine("+===================================+");
+
+            // Room id input
+            Console.WriteLine("| Please enter the Room ID:         |");
+            Console.WriteLine("+-----------------------------------+");
             int roomId = GetInputAsInt();
-            Console.WriteLine("Would you like to add an extra bed for 30$? (true/false)");
+
+            // Extra_bed option
+            Console.WriteLine("+-----------------------------------+");
+            Console.WriteLine("| Would you like an extra bed?      |");
+            Console.WriteLine("| (Additional $30 per night)        |");
+            Console.WriteLine("| Enter true or false:              |");
+            Console.WriteLine("+-----------------------------------+");
             bool extraBed = GetInputAsBool();
-            Console.WriteLine("Would you like to include breakfast? (true/false)");
+
+            // Breakfast option
+            Console.WriteLine("+-----------------------------------+");
+            Console.WriteLine("| Would you like to include         |");
+            Console.WriteLine("| daily breakfast? (true/false)     |");
+            Console.WriteLine("+-----------------------------------+");
             bool dailyBreakfast = GetInputAsBool();
+
+            // loading
+            Console.WriteLine("+-----------------------------------+");
+            Console.WriteLine("| Booking your room, please wait... |");
+            Console.WriteLine("+===================================+");
+
             await _query.BookRoom(_bookingPreferences, customerId, roomId, extraBed, dailyBreakfast);
+
+            // confirmation
+            Console.WriteLine("+===================================+");
+            Console.WriteLine("| Your booking is confirmed!        |");
+            Console.WriteLine("| Thank you for choosing us.        |");
+            Console.WriteLine("+===================================+");
+            Console.WriteLine("[Press any button to continue]");
+            Console.ReadLine(); // pause
         }
 
     }
@@ -153,11 +221,31 @@ public class BookingMenu : Menu
 
     public async Task DeleteBooking()
     {
-        // My booking metod här
-        Console.Write("Enter the booking ID to remove");
+        // My booking metod här?
+        Console.Clear();
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("|         DELETE A BOOKING          |");
+        Console.WriteLine("+===================================+");
+
+        // enter booking id
+        Console.WriteLine("| Please enter the Booking ID to delete:");
+        Console.WriteLine("+-----------------------------------+");
         var bookingId = GetInputAsInt();
+
+        // Confirmation message
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| Deleting your booking, please wait...");
+        Console.WriteLine("+-----------------------------------+");
+
         await _query.DeleteBooking(bookingId);
-        Console.WriteLine("Your booking has successfully been deleted");
+
+        // confirmatino message
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("| Your booking has been deleted     |");
+        Console.WriteLine("| successfully.                     |");
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("[Press any button to continue]");
+        Console.ReadLine();
     }
 
 

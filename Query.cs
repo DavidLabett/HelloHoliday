@@ -583,7 +583,10 @@ public class Query
             cmd.Parameters.AddWithValue(customerId);
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
-                Console.WriteLine("Your bookings:");
+                Console.Clear();
+                Console.WriteLine("+=============================================+");
+                Console.WriteLine("|                 YOUR BOOKINGS               |");
+                Console.WriteLine("+=============================================+");
                 while (await reader.ReadAsync())
                 {
                     Console.WriteLine(
@@ -595,7 +598,7 @@ public class Query
                         $"Breakfast: {reader.GetBoolean(6)} \t " +
                         $"Price/night: {reader.GetInt32(8)} \t " +
                         $"Room size: {reader.GetInt32(11)} \t " +
-                        $"City: {reader.GetString(15)} \t"
+                        $"City: {reader.GetString(15)} \t" 
                     );
                 }
             }

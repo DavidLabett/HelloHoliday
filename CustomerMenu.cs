@@ -38,11 +38,16 @@ public class CustomerMenu : Menu
 
     private void PrintCustomerMenu()
     {
-        Console.WriteLine("### Customer Menu");
-        Console.WriteLine("1. My Bookings");
-        Console.WriteLine("2. Modify");
-        Console.WriteLine("3. Delete");
-        Console.WriteLine("0. Return to Main Menu");
+        Console.Clear();
+        Console.WriteLine("+=========================+");
+        Console.WriteLine("|      CUSTOMER MENU      |");
+        Console.WriteLine("+=========================+");
+        Console.WriteLine("| 1. View My Bookings     |");
+        Console.WriteLine("| 2. Modify Profile       |");
+        Console.WriteLine("| 3. Delete Account       |");
+        Console.WriteLine("| 0. Return to Main Menu  |");
+        Console.WriteLine("+=========================+");
+        Console.WriteLine("| Select an option:       |");
     }
 
     private async Task AskUser()
@@ -68,19 +73,40 @@ public class CustomerMenu : Menu
 
     public async Task RegisterCustomer(string email)
     {
-        //Console.Clear();
-        Console.WriteLine("Please fill in your:");
-        Console.WriteLine("First name");
+        Console.Clear();
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("|         REGISTER NEW CUSTOMER     |");
+        Console.WriteLine("+===================================+");
+
+        // Collect user input with prompts
+        Console.WriteLine("| Please fill in the following details:");
+        Console.WriteLine("+-----------------------------------+");
+
+        Console.Write("| First Name: ");
         var firstName = GetInputAsString();
-        Console.WriteLine("Last name");
+
+        Console.Write("| Last Name: ");
         var lastName = GetInputAsString();
-        Console.WriteLine("Phone number");
+
+        Console.Write("| Phone Number: ");
         var phone = GetInputAsString();
-        Console.WriteLine("Date of birth");
+
+        Console.Write("| Date of Birth (YYYY-MM-DD): ");
         var birthdate = GetInputAsDate();
 
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| Registering your account, please wait...");
+        Console.WriteLine("+-----------------------------------+");
+
+        // Register the customer and fetch their details
         await _query.RegisterCustomer(firstName, lastName, email, phone, birthdate);
         _customer = await _query.GetCustomer(email);
+
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("| Registration Successful!          |");
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("[Press any button to continue]");
+        Console.ReadLine();
         PrintCustomerMenu();
         await AskUser();
     }
@@ -88,17 +114,48 @@ public class CustomerMenu : Menu
     // Switch-case? User should also be able to modify email..
     private async Task ModifyCustomer()
     {
-        Console.WriteLine("Please fill in your new:");
-        Console.WriteLine("First name");
+        Console.Clear();
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("|        MODIFY CUSTOMER DETAILS    |");
+        Console.WriteLine("+===================================+");
+
+        // Display current details for reference
+        Console.WriteLine("| Current Details:");
+        Console.WriteLine($"| First Name:     {_customer.firstname}");
+        Console.WriteLine($"| Last Name:      {_customer.lastname}");
+        Console.WriteLine($"| Phone Number:   {_customer.phone}");
+        Console.WriteLine($"| Date of Birth:  {_customer.birth}");
+        Console.WriteLine("+-----------------------------------+");
+        // New details below
+        Console.WriteLine("| Please fill in your new details:");
+
+        Console.Write("| First Name: ");
         var firstName = GetInputAsString();
-        Console.WriteLine("Last name");
+
+        Console.Write("| Last Name: ");
         var lastName = GetInputAsString();
-        Console.WriteLine("Phone number");
+
+        Console.Write("| Phone Number: ");
         var phone = GetInputAsString();
-        Console.WriteLine("Date of birth");
+
+        Console.Write("| Date of Birth (YYYY-MM-DD): ");
         var birthdate = GetInputAsDate();
 
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| Updating your information, please wait...");
+        Console.WriteLine("+-----------------------------------+");
+
+        // Update the customer's details
         await _query.ModifyCustomer(firstName, lastName, _customer.email, phone, birthdate);
+
+        // Update the local customer object with new details
+        _customer = await _query.GetCustomer(_customer.email);
+
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("| Details successfully updated!     |");
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("[Press any button to continue]");
+        Console.ReadLine(); //pause
         PrintCustomerMenu();
         await AskUser();
     }
@@ -107,6 +164,8 @@ public class CustomerMenu : Menu
     {
         await _query.DeleteCustomer(_customer.id);
         Console.WriteLine("Your account has successfully been deleted");
+        Console.WriteLine("[Press any button to continue]");
+        Console.ReadLine();
         await _mainMenu.Menu();
     }
 
