@@ -2,14 +2,14 @@ namespace HelloHoliday;
 
 public class BookingPreferences
 {
-    public string CheckInDate;
-    public string CheckOutDate;
-    public string RoomSize;
-    public string Pool;
-    public string Entertainment;
-    public string KidsClub;
-    public string Restaurant;
-    public string DistanceToBeach;
-    public string DistanceToCityCentre;
+    public DateTime CheckInDate;
+    public DateTime CheckOutDate;
+    public int RoomSize;
+    public bool Pool;
+    public bool Entertainment;
+    public bool KidsClub;
+    public bool Restaurant;
+    public int DistanceToBeach;
+    public int DistanceToCityCentre;
     public string Preference;
 }
