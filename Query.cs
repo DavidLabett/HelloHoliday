@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices.JavaScript;
 using Npgsql;
+using Exception = System.Exception;
 
 namespace HelloHoliday;
 
@@ -102,7 +103,7 @@ public class Query
                     DateTime customerBirth = reader.GetDateTime(5);
                     //Console.WriteLine($"id: {reader.GetInt32(0)} \t name: {reader.GetString(1)} \t email: {reader.GetString(3)}");
                     //Console.WriteLine(
-                        //$"{customerId}, {customerFirstName}, {customerFirstName}, {customerEmail}, {customerPhone}, {customerBirth}");
+                    //$"{customerId}, {customerFirstName}, {customerFirstName}, {customerEmail}, {customerPhone}, {customerBirth}");
                     return new Customer
                     {
                         id = customerId,
@@ -247,7 +248,7 @@ public class Query
                 cmd.Parameters.AddWithValue(preferences.KidsClub); // $8  
                 cmd.Parameters.AddWithValue(preferences.Restaurant); // $9  
                 cmd.Parameters.AddWithValue(preferences.Preference); // $10
-                
+
                 await using (var reader = await cmd.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
@@ -371,7 +372,6 @@ public class Query
                     }
                 }
             }
-
         }
         catch (Exception e)
         {
@@ -404,41 +404,41 @@ public class Query
 
         return null;
     }
-    
-    public async Task BookRoom(BookingPreferences preferences, int customerId, int roomId, bool extraBed, bool dailyBreakfast)
+
+    public async Task BookRoom(BookingPreferences preferences, int customerId, int roomId, bool extraBed,
+        bool dailyBreakfast)
     {
         try
-        { 
+        {
             int? bookingId = await GetBookingId();
             string bookingQuery;
-            
+
             bookingQuery = "INSERT INTO booking (id, customer_id, start_date, end_date, extra_bed, breakfast) " +
-                                               "VALUES ("+bookingId+", $1, $2, $3, $4, $5)";
-            
-                                                             
-            
+                           "VALUES (" + bookingId + ", $1, $2, $3, $4, $5)";
+
 
             await using (var cmd = _db.CreateCommand(bookingQuery))
             {
                 // Find id based on email
                 //var customerId = email;
 
-                cmd.Parameters.AddWithValue(customerId);                               // $1
+                cmd.Parameters.AddWithValue(customerId); // $1
                 //cmd.Parameters.AddWithValue(roomId);                                   // $2
-                cmd.Parameters.AddWithValue(preferences.CheckInDate);  // $3
+                cmd.Parameters.AddWithValue(preferences.CheckInDate); // $3
                 cmd.Parameters.AddWithValue(preferences.CheckOutDate); // $4
-                cmd.Parameters.AddWithValue(extraBed);     // $5
-                cmd.Parameters.AddWithValue(dailyBreakfast);     // $6
-                
+                cmd.Parameters.AddWithValue(extraBed); // $5
+                cmd.Parameters.AddWithValue(dailyBreakfast); // $6
+
                 await cmd.ExecuteNonQueryAsync();
             }
+
             // Add into bookingXrooms as well
-            var bookingXroomsQuery = "INSERT INTO booking_x_rooms (booking_id, room_id)" + 
-                                    "VALUES ("+bookingId+", $1)";
+            var bookingXroomsQuery = "INSERT INTO booking_x_rooms (booking_id, room_id)" +
+                                     "VALUES (" + bookingId + ", $1)";
             await using (var cmd = _db.CreateCommand(bookingXroomsQuery))
             {
-                cmd.Parameters.AddWithValue(roomId);  //$1
-                
+                cmd.Parameters.AddWithValue(roomId); //$1
+
                 await cmd.ExecuteNonQueryAsync();
             }
         }
@@ -448,15 +448,37 @@ public class Query
         }
     }
 
-    /*
-     public async Task ModifyBooking(BookingId)
-    {
-        int? bookingId = await GetBookingId();
-    }
-    public async Task DeleteBooking(BookingId)
+
+    /*  public async Task ModifyBooking(BookingId)
     {
         int? bookingId = await GetBookingId();
     }
     */
-    
+
+    public async Task DeleteBooking(int bookingId)
+    {
+        try
+        {
+            var bookingxroomsQuery = "DELETE from booking_x_rooms where id = $1";
+            var bookingQuery = "DELETE from booking where id = $1";
+
+            await using (var cmd = _db.CreateCommand(bookingxroomsQuery))
+            {
+                cmd.Parameters.AddWithValue(bookingId);
+
+                await cmd.ExecuteReaderAsync();
+            }
+
+            await using (var cmd = _db.CreateCommand(bookingQuery))
+            {
+                cmd.Parameters.AddWithValue(bookingId); // $1
+
+                await cmd.ExecuteReaderAsync();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error: {e.Message}");
+        }
+    }
 }

@@ -57,7 +57,7 @@ public class BookingMenu : Menu
                 await SearchRooms();
                 break;
             case "2":
-                await MakeBooking(); // need customer id
+                // await MakeBooking(); // need customer id
                 break;
             case "3":
                 await EditBooking();
@@ -153,7 +153,11 @@ public class BookingMenu : Menu
 
     public async Task DeleteBooking()
     {
-        
+        // My booking metod här
+        Console.Write("Enter the booking ID to remove");
+        var bookingId = GetInputAsInt();
+        await _query.DeleteBooking(bookingId);
+        Console.WriteLine("Your booking has successfully been deleted");
     }
 
 
