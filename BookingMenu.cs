@@ -57,7 +57,7 @@ public class BookingMenu : Menu
                 await SearchRooms();
                 break;
             case "2":
-                await MakeBooking();
+                await MakeBooking(); // need customer id
                 break;
             case "3":
                 await EditBooking();
