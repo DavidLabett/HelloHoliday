@@ -176,3 +176,42 @@ FROM
         GROUP BY hotel_id
         ) r2 ON r2.hotel_id = h.id
 
+CREATE VIEW mybookings AS
+SELECT
+    b.id AS booking_id,
+    b.customer_id,
+    c.firstname || ' ' || c.lastname AS customer_name,
+    b.start_date,
+    b.end_date,
+    b.extra_bed,
+    b.breakfast,
+    r.id AS room_id,
+    r.price AS room_price,
+    r.description AS room_description,
+    r.balcony AS room_balcony,
+    r.size AS room_size,
+    h.id AS hotel_id,
+    h.name AS hotel_name,
+    h.address AS hotel_address,
+    city.name AS city_name,
+    country.name AS country_name,
+    h.pool AS hotel_pool,
+    h.entertainment AS hotel_entertainment,
+    h.restaurant AS hotel_restaurant,
+    h.kidsclub AS hotel_kidsclub,
+    h.beach_proximity AS hotel_beach_proximity,
+    h.city_proximity AS hotel_city_proximity
+FROM
+    booking b
+        INNER JOIN
+    customer c ON b.customer_id = c.id
+        INNER JOIN
+    booking_x_rooms br ON b.id = br.booking_id
+        INNER JOIN
+    room r ON br.room_id = r.id
+        INNER JOIN
+    hotel h ON r.hotel_id = h.id
+        INNER JOIN
+    city ON h.city_id = city.id
+        INNER JOIN
+    country ON h.country_id = country.id;
