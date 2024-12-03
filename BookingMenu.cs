@@ -57,7 +57,7 @@ public class BookingMenu : Menu
                 await SearchRooms();
                 break;
             case "2":
-                await MakeBooking(); // need customer id
+                await MakeBooking(1); // need customer id
                 break;
             case "3":
                 await EditBooking();
@@ -122,7 +122,7 @@ public class BookingMenu : Menu
             DistanceToCityCentre = cityCentre,
             Preference = reviewOrPrice
         };
-        await _query.ListBookingPref(_bookingPreferences);
+        await _query.ListAvailableRooms(_bookingPreferences);
         await Menu();
     }
 

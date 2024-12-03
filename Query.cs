@@ -280,23 +280,22 @@ public class Query
     {
         /*
         select *
-            from room_master 
-            except 
-        select room_id, hotel_id, price, description, balcony, 
-            size, pool, entertainment, kidsclub, restaurant, 
+            from room_master
+            except
+        select room_id, hotel_id, price, description, balcony,
+            size, pool, entertainment, kidsclub, restaurant,
             beach_proximity, city_proximity, average_rating
         from booking_master
         where booking_start_date between '2024-12-1' and '2024-12-10'
         and booking_end_date between '2024-12-1' and '2024-12-10'
         order by price;
         */
-        
+
         try
         {
             //storing query
-            var query = "SELECT * FROM booking_master " +
-                        "WHERE (booking_start_date <= $2 AND booking_end_date >= $1) " +
-                        "AND (beach_proximity <= $3)" +
+            var query = "SELECT room_id, hotel_id, price, description, balcony, size, pool, entertainment, kidsclub, restaurant, beach_proximity, city_proximity, average_rating FROM room_master " +
+                        "WHERE (beach_proximity <= $3)" +
                         "AND (city_proximity <= $4)" +
                         "AND (size = $5)";
 
@@ -321,6 +320,11 @@ public class Query
                 query += "AND (restaurant = $9)";
             }
 
+            query += "EXCEPT " +
+                     "SELECT room_id, hotel_id, price, description, balcony, size, pool, entertainment, kidsclub, restaurant, beach_proximity, city_proximity, average_rating " +
+                     "FROM booking_master " +
+                     "WHERE (booking_start_date BETWEEN $1 AND $2) " + 
+                     "AND (booking_end_date BETWEEN $1 AND $2) ";
 
             //Adds an ORDER BY after all booleans are handled
             if (preferences.Preference.Contains("price"))
@@ -335,8 +339,8 @@ public class Query
             //query passed into _db.CreateCommand
             await using (var cmd = _db.CreateCommand(query))
             {
-                cmd.Parameters.AddWithValue(preferences.CheckOutDate); // $1
-                cmd.Parameters.AddWithValue(preferences.CheckInDate); // $2
+                cmd.Parameters.AddWithValue(preferences.CheckInDate); // $1
+                cmd.Parameters.AddWithValue(preferences.CheckOutDate); // $2
 
                 cmd.Parameters.AddWithValue(preferences.DistanceToBeach); // $3
                 cmd.Parameters.AddWithValue(preferences.DistanceToCityCentre); // $4
@@ -367,8 +371,8 @@ public class Query
                             $"hotel_id: {reader.GetInt32(1)} \t " +
                             $"price: {reader.GetInt32(2)} \t " +
                             $"rating: {reader.GetFloat(12)} \t" +
-                            $"description: {reader.GetString(3)} \t " +
-                            $"date: {reader.GetDateTime(13).ToString("yy-MM-dd")} to:{reader.GetDateTime(14).ToString("yy-MM-dd")}"
+                            $"description: {reader.GetString(3)} \t "
+                            //$"date: {reader.GetDateTime(13).ToString("yy-MM-dd")} to:{reader.GetDateTime(14).ToString("yy-MM-dd")}"
                         );
                     }
                 }
