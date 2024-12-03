@@ -122,7 +122,7 @@ public class BookingMenu : Menu
             DistanceToCityCentre = cityCentre,
             Preference = reviewOrPrice
         };
-        await _query.ListBookingPref(_bookingPreferences);
+        await _query.ListAvailableRooms(_bookingPreferences);
         await Menu();
     }
 
