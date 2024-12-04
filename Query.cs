@@ -598,6 +598,7 @@ public class Query
                         $"{reader.GetDateTime(3).ToString("yy-MM-dd")} to {reader.GetDateTime(4).ToString("yy-MM-dd"),-19}" +
                         $"{reader.GetBoolean(5),-12}{reader.GetBoolean(6),-12}{reader.GetInt32(8),-15}" +
                         $"{reader.GetInt32(11),-14}{reader.GetString(15),-20}");
+                        Console.WriteLine(new string('-', 130)); // calc ~line with comvined padding width
                 }
             }
         }
