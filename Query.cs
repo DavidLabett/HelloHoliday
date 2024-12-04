@@ -11,7 +11,7 @@ public class Query
     {
         _db = db;
     }
-    
+
     // method for getting a customer object 
     public async Task<Customer?> GetCustomer(string email)
     {
@@ -31,7 +31,7 @@ public class Query
                     string customerEmail = reader.GetString(3);
                     string customerPhone = reader.GetString(4);
                     DateTime customerBirth = reader.GetDateTime(5);
-                    
+
                     return new Customer
                     {
                         id = customerId,
@@ -44,12 +44,13 @@ public class Query
                 }
             }
         }
+
         return null;
     }
 
 
     // Customer menu methods
-    
+
     public async Task<bool> ValidateEmail(String email)
     {
         await using (var cmd = _db.CreateCommand("SELECT * FROM customer WHERE email = $1"))
@@ -60,7 +61,7 @@ public class Query
                 while (await reader.ReadAsync())
                 {
                     string dbEmail = reader.GetString(3);
-                    
+
                     if (email == dbEmail)
                     {
                         return true;
@@ -122,10 +123,11 @@ public class Query
         try
         {
             //storing query
-            var query = "SELECT room_id, hotel_id, price, description, balcony, size, pool, entertainment, kidsclub, restaurant, beach_proximity, city_proximity, average_rating FROM room_master " +
-                        "WHERE (beach_proximity <= $3)" +
-                        "AND (city_proximity <= $4)" +
-                        "AND (size = $5)";
+            var query =
+                "SELECT room_id, hotel_id, price, description, balcony, size, pool, entertainment, kidsclub, restaurant, beach_proximity, city_proximity, average_rating FROM room_master " +
+                "WHERE (beach_proximity <= $3)" +
+                "AND (city_proximity <= $4)" +
+                "AND (size = $5)";
 
             // Handle Booleans to display both values if false:
             if (preferences.Pool) // if isPool is true
@@ -147,17 +149,16 @@ public class Query
             {
                 query += "AND (restaurant = $9)";
             }
+
             // The EXCEPT part will exclude the result from the second select-statment and therefor exclude all unavalable rooms
             query += "EXCEPT " +
                      "SELECT room_id, hotel_id, price, description, balcony, size, pool, entertainment, kidsclub, restaurant, beach_proximity, city_proximity, average_rating " +
                      "FROM booking_master " +
-                     "WHERE (booking_start_date BETWEEN $1 AND $2) " + 
-                     "AND (booking_end_date BETWEEN $1 AND $2) ";
-
+                     "WHERE (booking_start_date, booking_end_date) overlaps (date  $1, date  $2)";
             //Adds an ORDER BY after all booleans are handled
             if (preferences.Preference.Contains("price"))
             {
-                query += " ORDER BY price"; 
+                query += " ORDER BY price";
             }
             else if (preferences.Preference.Contains("rating") || preferences.Preference.Contains("review"))
             {
@@ -178,9 +179,9 @@ public class Query
                 cmd.Parameters.AddWithValue(preferences.Entertainment); // $7  
                 cmd.Parameters.AddWithValue(preferences.KidsClub); // $8  
                 cmd.Parameters.AddWithValue(preferences.Restaurant); // $9  
-                
+
                 cmd.Parameters.AddWithValue(preferences.Preference); // $10
-                
+
                 await using (var reader = await cmd.ExecuteReaderAsync())
                 {
                     Console.WriteLine("Available Rooms:");
@@ -188,10 +189,10 @@ public class Query
                     Console.WriteLine(
                         $"{"Room ID",-10}{"Hotel ID",-10}{"Price",-10}{"Rating",-10}" +
                         $"{"Description",-60}{"Amenities",-10}");
-                        //$"{"Pool",-10}{"Entertainment",-15}{"Kids Club",-15}{"Restaurant",-15}");
+                    //$"{"Pool",-10}{"Entertainment",-15}{"Kids Club",-15}{"Restaurant",-15}");
                     // writes string with '-' count ~= 155 (all padding combined to match width)
-                    Console.WriteLine(new string('-', 155));  //Add country & city
-    
+                    Console.WriteLine(new string('-', 155)); //Add country & city
+
                     // Print table rows
                     while (await reader.ReadAsync())
                     {
@@ -218,11 +219,12 @@ public class Query
                         {
                             restaurant = "R";
                         }
+
                         // copy-paste the padding of reader titles:
                         Console.WriteLine(
                             $"{reader.GetInt32(0),-10}{reader.GetInt32(1),-10}{reader.GetInt32(2),-10}{reader.GetFloat(12),-10}" +
                             $"{reader.GetString(3),-60}{pool + entertainment + restaurant + kidsclub,-10}");
-                            //$"{reader.GetBoolean(6),-10}{reader.GetBoolean(7),-15}{reader.GetBoolean(8),-15}{reader.GetBoolean(9),-15}");
+                        //$"{reader.GetBoolean(6),-10}{reader.GetBoolean(7),-15}{reader.GetBoolean(8),-15}{reader.GetBoolean(9),-15}");
                     }
                 }
             }
@@ -265,15 +267,15 @@ public class Query
             {
                 query += "AND (restaurant = $9)";
             }
-            
+
             //Adds an ORDER BY after all booleans are handled
             if (preferences.Preference.Contains("price"))
             {
-                query += " ORDER BY price"; 
+                query += " ORDER BY price";
             }
             else if (preferences.Preference.Contains("rating") || preferences.Preference.Contains("review"))
             {
-                query += " ORDER BY average_rating DESC "; 
+                query += " ORDER BY average_rating DESC ";
             }
 
             //query is passed into _db.CreateCommand
@@ -290,9 +292,9 @@ public class Query
                 cmd.Parameters.AddWithValue(preferences.Entertainment); // $7  
                 cmd.Parameters.AddWithValue(preferences.KidsClub); // $8  
                 cmd.Parameters.AddWithValue(preferences.Restaurant); // $9  
-                
+
                 cmd.Parameters.AddWithValue(preferences.Preference); // $10
-                
+
                 await using (var reader = await cmd.ExecuteReaderAsync())
                 {
                     Console.WriteLine("Booked Rooms:");
@@ -315,7 +317,6 @@ public class Query
                     }
                 }
             }
-
         }
         catch (Exception e)
         {
@@ -323,7 +324,7 @@ public class Query
         }
     }
 
-    
+
     // Booking Methods
 
     // Finds the higest id value in the booking table and return the next expected id (id + 1)
@@ -351,8 +352,8 @@ public class Query
             int? bookingId = await GetBookingId();
 
             string bookingQuery = "INSERT INTO booking (id, customer_id, start_date, end_date, extra_bed, breakfast) " +
-                                 "VALUES (" + bookingId + ", $1, $2, $3, $4, $5)";
-            
+                                  "VALUES (" + bookingId + ", $1, $2, $3, $4, $5)";
+
             await using (var cmd = _db.CreateCommand(bookingQuery))
             {
                 cmd.Parameters.AddWithValue(customerId); // $1
@@ -379,7 +380,7 @@ public class Query
             Console.WriteLine($"Error while booking the room: {e.Message}");
         }
     }
-    
+
     /*  public async Task ModifyBooking(BookingId)
     {
         int? bookingId = await GetBookingId();
@@ -427,7 +428,7 @@ public class Query
                 Console.WriteLine("+=============================================+");
                 Console.WriteLine("|                 YOUR BOOKINGS               |");
                 Console.WriteLine("+=============================================+");
-               // String formatting 
+                // String formatting 
                 Console.WriteLine(
                     $"{"B.Id",-8}{"C.Id",-8}{"Customer",-20}{"Dates",-30}" +
                     $"{"Extra Bed",-12}{"Breakfast",-12}{"Price/Night",-15}" +
@@ -442,7 +443,7 @@ public class Query
                         $"{reader.GetDateTime(3).ToString("yy-MM-dd")} to {reader.GetDateTime(4).ToString("yy-MM-dd"),-19}" +
                         $"{reader.GetBoolean(5),-12}{reader.GetBoolean(6),-12}{reader.GetInt32(8),-15}" +
                         $"{reader.GetInt32(11),-14}{reader.GetString(15),-20}");
-                        Console.WriteLine(new string('-', 130)); // calc ~line with comvined padding width
+                    Console.WriteLine(new string('-', 130)); // calc ~line with comvined padding width
                 }
             }
         }
