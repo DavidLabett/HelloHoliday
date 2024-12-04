@@ -195,5 +195,8 @@ public class CustomerMenu : Menu
         {
             await _query.MyBookings(_customer.id);
         }
+        Console.WriteLine("[Press any button to continue]");
+        Console.ReadLine();
+        // Returns to CustomerMenu
     }
 }
