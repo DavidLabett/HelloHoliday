@@ -14,8 +14,16 @@ public class BookingMenu : Menu
     public async Task Menu(Customer customer)
     {
         _customer = customer;
-        PrintBookingMenu();
-        await AskUser();
+        if (customer is not null)
+        {
+            PrintBookingMenu();
+            await AskUser ();
+        }
+        else
+        {
+            Console.WriteLine("*Please login before you can access this feature*");
+            Console.ReadLine();
+        }
     }
 
     public void PrintBookingMenu()
@@ -63,6 +71,7 @@ public class BookingMenu : Menu
                 PrintBookingMenu();
             }
         }
+        _bookingPreferences = null; // nulls preferences when leaving bookingmenu
     }
 
     public async Task SearchRooms()
@@ -152,33 +161,8 @@ public class BookingMenu : Menu
         // returns to either BookingMenu or MakeBooking depending on where SearchRooms was called
     }
 
-    /*public async Task<Customer?> GetCustomer(string email)
-    {
-        //handles email input
-        var isValid = await _query.ValidateEmail(email);
-        if (isValid)
-        {
-            Console.WriteLine("Email is valid.");
-            return await _query.GetCustomer(email);
-        }
-        else
-        {
-            Console.WriteLine("Email not found.");
-            return null;
-        }
-    }*/
-
    public async Task MakeBooking()
 {
-    // Call the Login method to get the customer
-   // _customer = await _mainMenu.Login(); 
-
-    /*if (_customer is null)
-    {
-        Console.WriteLine("Booking process aborted due to login failure.");
-        return; // Exit the method if login fails
-    }*/
-
     if (_bookingPreferences is null)
     {
         await SearchRooms();

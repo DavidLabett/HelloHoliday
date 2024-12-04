@@ -5,7 +5,9 @@ public class MainMenu : Menu
     BookingMenu _bookingMenu;
     CustomerMenu _customerMenu;
     Query _query;
-    static Customer? _currentCustomer;
+    
+    Customer? _currentCustomer;
+    BookingPreferences? _bookingPreferences;
     
    public MainMenu(Query query)
     {
@@ -29,7 +31,7 @@ public class MainMenu : Menu
         Console.WriteLine("| 1. Customer Menu        |");
         Console.WriteLine("| 2. Booking Menu         |");
         Console.WriteLine("| 3. Login Customer       |");
-        Console.WriteLine("| 4. Logout               |"); // Option to log out
+        Console.WriteLine("| 4. Logout               |");
         Console.WriteLine("| 0. Quit                 |");
         Console.WriteLine("+=========================+");
         Console.WriteLine("| Select an option:       |");

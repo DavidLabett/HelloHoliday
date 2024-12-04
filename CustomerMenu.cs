@@ -9,15 +9,12 @@ public class CustomerMenu : Menu
     public CustomerMenu(Query query)
     {
         _query = query;
-        //_customer = customer;
     }
 
     public async Task Menu(Customer customer)
     {
         _customer = customer;
         // Call the Login method to get the customer
-        //var customer = await _mainMenu.Login(); // Use the Login method from MainMenu
-
         if (customer is not null)
         {
             PrintCustomerMenu();
@@ -25,7 +22,8 @@ public class CustomerMenu : Menu
         }
         else
         {
-            
+            Console.WriteLine("*Please login before you can access this feature*");
+            Console.ReadLine();
         }
     }
 
@@ -103,7 +101,6 @@ public class CustomerMenu : Menu
 
         // Register the customer and fetch their details
         await _query.RegisterCustomer(firstName, lastName, email, phone, birthdate);
-        //_customer = await _query.GetCustomer(email);
         var customer = await _query.GetCustomer(email);
         Console.WriteLine("+===================================+");
         Console.WriteLine("| Registration Successful!          |");
