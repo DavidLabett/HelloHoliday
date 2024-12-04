@@ -71,4 +71,32 @@ public abstract class Menu
 
         return date;
     }
+
+    public int GetInputAsRoomSize()
+    {
+        string input = GetInputAsString();
+
+        switch (input)
+        {
+            case "single":
+            case "s":
+            case "1":
+                return 1;
+            case "double":
+            case "d":
+            case "2":
+                return 2;
+            case "triple":
+            case "t":
+            case "3":
+                return 3;
+            case "quad":
+            case "q":
+            case "4":
+                return 4;
+        }
+
+        Console.WriteLine("Thats not a room size (Single, Double, Triple, Quad)");
+        return GetInputAsRoomSize();
+    }
 }

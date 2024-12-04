@@ -93,7 +93,7 @@ public class BookingMenu : Menu
         Console.WriteLine("| What type of room do you need?    |");
         Console.WriteLine("| (Single, Double, Triple, Quad)    |");
         Console.WriteLine("+-----------------------------------+");
-        int roomSize = GetInputAsInt();
+        int roomSize = GetInputAsRoomSize();
 
         // bools
         Console.WriteLine("+-----------------------------------+");
