@@ -190,7 +190,7 @@ public class Query
                         $"{"Description",-60}{"Amenities",-10}");
                         //$"{"Pool",-10}{"Entertainment",-15}{"Kids Club",-15}{"Restaurant",-15}");
                     // writes string with '-' count ~= 155 (all padding combined to match width)
-                    Console.WriteLine(new string('-', 155)); 
+                    Console.WriteLine(new string('-', 155));  //Add country & city
     
                     // Print table rows
                     while (await reader.ReadAsync())

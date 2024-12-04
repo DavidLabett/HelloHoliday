@@ -148,6 +148,8 @@ public class BookingMenu : Menu
             Preference = reviewOrPrice
         };
         await _query.ListAvailableRooms(_bookingPreferences);
+        Console.WriteLine("[Press any button to continue]");
+        Console.ReadLine(); // pause
         // returns to either BookingMenu or MakeBooking depending on where SearchRooms was called
     }
 

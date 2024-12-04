@@ -176,7 +176,7 @@ FROM
         GROUP BY hotel_id
         ) r2 ON r2.hotel_id = h.id;
 
--- creates a view for my bookings
+-- creates a view for mybookings
 CREATE VIEW mybookings AS
 SELECT
     b.id AS booking_id,
