@@ -119,6 +119,7 @@ CREATE TABLE booking_x_rooms(
             REFERENCES room(id)
 );
 
+
 -- creating a master view for all bookings
 CREATE VIEW booking_master AS
 SELECT
@@ -175,6 +176,79 @@ FROM
         FROM rating
         GROUP BY hotel_id
         ) r2 ON r2.hotel_id = h.id;
+
+
+-- creating a second master view for all bookings
+CREATE VIEW booking_master2 AS
+SELECT
+    r.id AS room_id,
+    r.hotel_id,
+    r.price,
+    r.description AS room_description,
+    r.balcony,
+    r.size,
+    h.name AS hotel_name,
+    h.description AS hotel_description,
+    h.pool,
+    h.entertainment,
+    h.kidsclub,
+    h.restaurant,
+    h.beach_proximity,
+    h.city_proximity,
+    h.address,
+    c.name AS city,
+    co.name AS country,
+    r2.average_rating,
+    b.start_date AS booking_start_date,
+    b.end_date AS booking_end_date
+FROM
+    room r
+        LEFT JOIN booking_x_rooms bxr ON r.id = bxr.room_id
+        LEFT JOIN booking b ON bxr.booking_id = b.id
+        JOIN hotel h ON h.id = r.hotel_id
+        JOIN city c ON c.id = h.city_id
+        JOIN country co ON co.id = h.country_id
+        JOIN
+    (
+        SELECT ROUND(AVG(rating), 1) AS average_rating, hotel_id
+        FROM rating
+        GROUP BY hotel_id
+    ) r2 ON r2.hotel_id = h.id;
+
+
+-- creating a second master view for all rooms
+CREATE VIEW room_master2 AS
+SELECT
+    r.id AS room_id,
+    r.hotel_id,
+    r.price,
+    r.description AS room_description,
+    r.balcony,
+    r.size,
+    h.name AS hotel_name,
+    h.description AS hotel_description,
+    h.pool,
+    h.entertainment,
+    h.kidsclub,
+    h.restaurant,
+    h.beach_proximity,
+    h.city_proximity,
+    h.address,
+    c.name AS city,
+    co.name AS country,
+    r2.average_rating
+FROM
+    room r
+        JOIN hotel h ON h.id = r.hotel_id
+        JOIN city c ON c.id = h.city_id
+        JOIN country co ON co.id = h.country_id
+        JOIN
+    (
+        SELECT ROUND(AVG(rating), 1) AS average_rating, hotel_id
+        FROM rating
+        GROUP BY hotel_id
+    ) r2 ON r2.hotel_id = h.id;
+
 
 -- creates a view for mybookings
 CREATE VIEW mybookings AS
