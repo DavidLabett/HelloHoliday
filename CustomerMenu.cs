@@ -23,6 +23,10 @@ public class CustomerMenu : Menu
             PrintCustomerMenu();
             await AskUser ();
         }
+        else
+        {
+            
+        }
     }
 
     private void PrintCustomerMenu()
@@ -70,7 +74,7 @@ public class CustomerMenu : Menu
         }
     }
 
-    public async Task RegisterCustomer(string email)
+    public async Task<Customer> RegisterCustomer(string email)
     {
         Console.Clear();
         Console.WriteLine("+===================================+");
@@ -100,12 +104,13 @@ public class CustomerMenu : Menu
         // Register the customer and fetch their details
         await _query.RegisterCustomer(firstName, lastName, email, phone, birthdate);
         //_customer = await _query.GetCustomer(email);
-
+        var customer = await _query.GetCustomer(email);
         Console.WriteLine("+===================================+");
         Console.WriteLine("| Registration Successful!          |");
         Console.WriteLine("+===================================+");
         Console.WriteLine("[Press any button to continue]");
         Console.ReadLine();
+        return customer;
         // returns to the menu that called the method. Either CustomerMenu or MakeBooking();
     }
 

@@ -111,7 +111,7 @@ public class MainMenu : Menu
             Console.WriteLine("+-----------------------------------+");
             Console.WriteLine("[Press any button to continue]");
             Console.ReadLine(); // pause
-            await _customerMenu.RegisterCustomer(email);
+            _currentCustomer = await _customerMenu.RegisterCustomer(email);
         }
         return null; // Return null if login fails
     }
