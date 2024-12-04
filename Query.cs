@@ -25,21 +25,14 @@ public class Query
             {
                 while (await reader.ReadAsync())
                 {
-                    int customerId = reader.GetInt32(0);
-                    string customerFirstName = reader.GetString(1);
-                    string customerLastName = reader.GetString(2);
-                    string customerEmail = reader.GetString(3);
-                    string customerPhone = reader.GetString(4);
-                    DateTime customerBirth = reader.GetDateTime(5);
-
                     return new Customer
                     {
-                        id = customerId,
-                        firstname = customerFirstName,
-                        lastname = customerLastName,
-                        email = customerEmail,
-                        phone = customerPhone,
-                        birth = customerBirth
+                        id = reader.GetInt32(0),
+                        firstname = reader.GetString(1),
+                        lastname = reader.GetString(2),
+                        email = reader.GetString(3),
+                        phone = reader.GetString(4),
+                        birth = reader.GetDateTime(5)
                     };
                 }
             }
