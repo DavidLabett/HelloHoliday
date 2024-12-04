@@ -151,7 +151,7 @@ public class Query
             // The $1 is meant to be used instead of preferences.CheckInDate, this solution is a bad one because this way of doing it is not going to work in the future
             // This way is not going to be supported in the future therefor is it bad to teach it
             // I don't see how to solve this in the correct way (using $1 and $2) 
-            
+
             //Adds an ORDER BY after all booleans are handled
             if (preferences.Preference.Contains("price"))
             {
@@ -193,6 +193,7 @@ public class Query
                     // Print table rows
                     while (await reader.ReadAsync())
                     {
+
                         string pool = " ";
                         string entertainment = " ";
                         string kidsclub = " ";
@@ -222,6 +223,12 @@ public class Query
                             $"{reader.GetInt32(0),-10}{reader.GetInt32(1),-10}{reader.GetInt32(2),-10}{reader.GetFloat(12),-10}" +
                             $"{reader.GetString(3),-60}{pool + entertainment + restaurant + kidsclub,-10}");
                         //$"{reader.GetBoolean(6),-10}{reader.GetBoolean(7),-15}{reader.GetBoolean(8),-15}{reader.GetBoolean(9),-15}");
+
+
+                    }
+                    if (!reader.HasRows)
+                    {
+                        Console.WriteLine("No rooms available for your current preferences");
                     }
                 }
             }
