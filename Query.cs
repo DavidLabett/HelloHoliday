@@ -187,17 +187,42 @@ public class Query
                     //Reader titles for each column, with string formatting, {String, padding}
                     Console.WriteLine(
                         $"{"Room ID",-10}{"Hotel ID",-10}{"Price",-10}{"Rating",-10}" +
-                        $"{"Description",-60}{"Pool",-10}{"Entertainment",-15}{"Kids Club",-15}{"Restaurant",-15}");
+                        $"{"Description",-60}{"Amenities",-10}");
+                        //$"{"Pool",-10}{"Entertainment",-15}{"Kids Club",-15}{"Restaurant",-15}");
                     // writes string with '-' count ~= 155 (all padding combined to match width)
                     Console.WriteLine(new string('-', 155)); 
     
                     // Print table rows
                     while (await reader.ReadAsync())
                     {
+                        string pool = " ";
+                        string entertainment = " ";
+                        string kidsclub = " ";
+                        string restaurant = " ";
+                        if (reader.GetBoolean(6))
+                        {
+                            pool = "P";
+                        }
+
+                        if (reader.GetBoolean(7))
+                        {
+                            entertainment = "E";
+                        }
+
+                        if (reader.GetBoolean(8))
+                        {
+                            kidsclub = "K";
+                        }
+
+                        if (reader.GetBoolean(9))
+                        {
+                            restaurant = "R";
+                        }
                         // copy-paste the padding of reader titles:
                         Console.WriteLine(
                             $"{reader.GetInt32(0),-10}{reader.GetInt32(1),-10}{reader.GetInt32(2),-10}{reader.GetFloat(12),-10}" +
-                            $"{reader.GetString(3),-60}{reader.GetBoolean(6),-10}{reader.GetBoolean(7),-15}{reader.GetBoolean(8),-15}{reader.GetBoolean(9),-15}");
+                            $"{reader.GetString(3),-60}{pool + entertainment + restaurant + kidsclub,-10}");
+                            //$"{reader.GetBoolean(6),-10}{reader.GetBoolean(7),-15}{reader.GetBoolean(8),-15}{reader.GetBoolean(9),-15}");
                     }
                 }
             }
