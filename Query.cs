@@ -184,21 +184,20 @@ public class Query
                 await using (var reader = await cmd.ExecuteReaderAsync())
                 {
                     Console.WriteLine("Available Rooms:");
+                    //Reader titles for each column, with string formatting, {String, padding}
+                    Console.WriteLine(
+                        $"{"Room ID",-10}{"Hotel ID",-10}{"Price",-10}{"Rating",-10}" +
+                        $"{"Description",-60}{"Pool",-10}{"Entertainment",-15}{"Kids Club",-15}{"Restaurant",-15}");
+                    // writes string with '-' count ~= 155 (all padding combined to match width)
+                    Console.WriteLine(new string('-', 155)); 
+    
+                    // Print table rows
                     while (await reader.ReadAsync())
                     {
+                        // copy-paste the padding of reader titles:
                         Console.WriteLine(
-                            //Validation that both boolean values are checked:
-                            $"pool: {reader.GetBoolean(6)} \t " +
-                            $"entertainment: {reader.GetBoolean(7)} \t " +
-                            $"kidsclub: {reader.GetBoolean(8)} \t " +
-                            $"restaurant: {reader.GetBoolean(9)} \t " +
-                            //Validation that both boolean values are checked^
-                            $"room_id: {reader.GetInt32(0)} \t " +
-                            $"hotel_id: {reader.GetInt32(1)} \t " +
-                            $"price: {reader.GetInt32(2)} \t " +
-                            $"rating: {reader.GetFloat(12)} \t" +
-                            $"description: {reader.GetString(3)}"
-                        );
+                            $"{reader.GetInt32(0),-10}{reader.GetInt32(1),-10}{reader.GetInt32(2),-10}{reader.GetFloat(12),-10}" +
+                            $"{reader.GetString(3),-60}{reader.GetBoolean(6),-10}{reader.GetBoolean(7),-15}{reader.GetBoolean(8),-15}{reader.GetBoolean(9),-15}");
                     }
                 }
             }
@@ -403,19 +402,22 @@ public class Query
                 Console.WriteLine("+=============================================+");
                 Console.WriteLine("|                 YOUR BOOKINGS               |");
                 Console.WriteLine("+=============================================+");
+               // String formatting
+                Console.WriteLine(
+                    $"{"B.Id",-8}{"C.Id",-8}{"Customer",-20}{"Dates",-30}" +
+                    $"{"Extra Bed",-12}{"Breakfast",-12}{"Price/Night",-15}" +
+                    $"{"Room Size",-15}{"City",-20}");
+                Console.WriteLine(new string('-', 130)); // calc ~line with comvined padding width
+
                 while (await reader.ReadAsync())
                 {
+                    // Print-rows
                     Console.WriteLine(
-                        $"B.Id: {reader.GetInt32(0)} \t " +
-                        $"C.Id: {reader.GetInt32(1)} \t " +
-                        $"Customer: {reader.GetString(2)} \t " +
-                        $"Dates: {reader.GetDateTime(3).ToString("yy-MM-dd")} to:{reader.GetDateTime(4).ToString("yy-MM-dd")} \t " +
-                        $"Extra bed: {reader.GetBoolean(5)} \t " +
-                        $"Breakfast: {reader.GetBoolean(6)} \t " +
-                        $"Price/night: {reader.GetInt32(8)} \t " +
-                        $"Room size: {reader.GetInt32(11)} \t " +
-                        $"City: {reader.GetString(15)} \t" 
-                    );
+                        $"{reader.GetInt32(0),-8}{reader.GetInt32(1),-8}{reader.GetString(2),-20}" +
+                        $"{reader.GetDateTime(3).ToString("yy-MM-dd")} to {reader.GetDateTime(4).ToString("yy-MM-dd"),-19}" +
+                        $"{reader.GetBoolean(5),-12}{reader.GetBoolean(6),-12}{reader.GetInt32(8),-15}" +
+                        $"{reader.GetInt32(11),-14}{reader.GetString(15),-20}");
+                        Console.WriteLine(new string('-', 130)); // calc ~line with comvined padding width
                 }
             }
         }

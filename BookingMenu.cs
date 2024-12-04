@@ -235,7 +235,7 @@ public class BookingMenu : Menu
 
     public async Task DeleteBooking()
     {
-        // My booking method here?
+        // MyBooking method here?
         Console.Clear();
         Console.WriteLine("+===================================+");
         Console.WriteLine("|         DELETE A BOOKING          |");
