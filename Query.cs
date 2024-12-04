@@ -378,11 +378,50 @@ public class Query
         }
     }
 
-    /*  public async Task ModifyBooking(BookingId)
+    public async Task FindBooking(int bookingId)
     {
-        int? bookingId = await GetBookingId();
+        var query = "SELECT * FROM mybookings WHERE booking_id = $1";
+        await using (var cmd = _db.CreateCommand(query))
+        {
+            cmd.Parameters.AddWithValue(bookingId); // $1
+
+            await using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                Console.Clear();
+                Console.WriteLine("Your current booking:");
+                // String formatting 
+                Console.WriteLine(
+                    $"{"B.Id",-8}{"C.Id",-8}{"Customer",-20}{"Dates",-30}" +
+                    $"{"Extra Bed",-12}{"Breakfast",-12}{"Price/Night",-15}" +
+                    $"{"Room Size",-15}{"City",-20}");
+                Console.WriteLine(new string('-', 130)); // calc ~line with comvined padding width
+
+                while (await reader.ReadAsync())
+                {
+                    // Print-rows
+                    Console.WriteLine(
+                        $"{reader.GetInt32(0),-8}{reader.GetInt32(1),-8}{reader.GetString(2),-20}" +
+                        $"{reader.GetDateTime(3).ToString("yy-MM-dd")} to {reader.GetDateTime(4).ToString("yy-MM-dd"),-19}" +
+                        $"{reader.GetBoolean(5),-12}{reader.GetBoolean(6),-12}{reader.GetInt32(8),-15}" +
+                        $"{reader.GetInt32(11),-14}{reader.GetString(15),-20}");
+                    Console.WriteLine(new string('-', 130)); // calc ~line with comvined padding width
+                }
+            }
+        }
     }
-    */
+    
+    public async Task ModifyBooking(int bookingId, bool extraBed, bool dailyBreakfast)
+    {
+        await using (var cmd = _db.CreateCommand(
+                         "UPDATE booking SET extra_bed = $1, breakfast = $2 WHERE id = $3"))
+        {
+            cmd.Parameters.AddWithValue(extraBed);
+            cmd.Parameters.AddWithValue(dailyBreakfast);
+            cmd.Parameters.AddWithValue(bookingId);
+            await cmd.ExecuteNonQueryAsync();
+        }
+    }
+    
 
     public async Task DeleteBooking(int bookingId)
     {
