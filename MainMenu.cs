@@ -5,13 +5,13 @@ public class MainMenu : Menu
     BookingMenu _bookingMenu;
     CustomerMenu _customerMenu;
     Query _query;
-    Customer? _currentCustomer;
+    static Customer? _currentCustomer;
     
    public MainMenu(Query query)
     {
         _query = query; // Initialize the Query object
-        _customerMenu = new CustomerMenu(query, this);
-        _bookingMenu = new BookingMenu(query, _customerMenu, this);
+        _customerMenu = new CustomerMenu(query);
+        _bookingMenu = new BookingMenu(query);
     }
 
     public async Task Menu()
@@ -47,7 +47,7 @@ public class MainMenu : Menu
                 case ("1"):
                 case ("customer"):
                 case ("c"):
-                    await _customerMenu.Menu();
+                    await _customerMenu.Menu(_currentCustomer);
                     break;
                 case ("2"):
                 case ("booking"):
@@ -97,9 +97,9 @@ public class MainMenu : Menu
             var customer = await _query.GetCustomer(email);
             if (customer != null)
             {
-                Console.Clear();
-                Console.WriteLine($"Welcome back {customer.firstname} {customer.lastname}!");
                 _currentCustomer = customer; // Store the logged-in customer
+                Console.WriteLine($"Welcome back {customer.firstname} {customer.lastname}!");
+                Console.ReadLine();
                 return customer; // Return the customer object
             }
         }
@@ -127,6 +127,8 @@ public class MainMenu : Menu
         {
             Console.WriteLine("No user is currently logged in.");
         }
+
+        Console.ReadLine();
     }
     
 }

@@ -4,20 +4,18 @@ public class BookingMenu : Menu
 {
     Query _query;
     BookingPreferences? _bookingPreferences;
-    CustomerMenu _customerMenu;
-    MainMenu _mainMenu;
+    Customer _customer;
 
-    public BookingMenu(Query query, CustomerMenu customerMenu, MainMenu mainMenu)
+    public BookingMenu(Query query)
     {
         _query = query;
-        _customerMenu = customerMenu;
-        _mainMenu = mainMenu;
     }
 
     public async Task Menu(Customer customer)
     {
+        _customer = customer;
         PrintBookingMenu();
-        await AskUser(customer);
+        await AskUser();
     }
 
     public void PrintBookingMenu()
@@ -28,14 +26,14 @@ public class BookingMenu : Menu
         Console.WriteLine("+===========================+");
         Console.WriteLine("| 1. Search Available Rooms |");
         Console.WriteLine("| 2. Make a Booking         |");
-        Console.WriteLine("| 3. Edit a Booking         |");
+        Console.WriteLine("| 3. Modify a Booking       |");
         Console.WriteLine("| 4. Delete a Booking       |");
         Console.WriteLine("| 0. Return to Main Menu    |");
         Console.WriteLine("+===========================+");
         Console.WriteLine("| Select an option:         |");
     }
 
-    public async Task AskUser(Customer customer)
+    public async Task AskUser()
     {
         bool continueMenu = true;
         while (continueMenu) // so we get a valid answer before continuing
@@ -48,13 +46,13 @@ public class BookingMenu : Menu
                     await SearchRooms();
                     break;
                 case "2":
-                    await MakeBooking(customer);
+                    await MakeBooking();
                     break;
                 case "3":
-                    await ModifyBooking(customer);
+                    await ModifyBooking();
                     break;
                 case "4":
-                    await DeleteBooking(customer);
+                    await DeleteBooking();
                     break;
                 case "0":
                     continueMenu = false;
@@ -154,7 +152,7 @@ public class BookingMenu : Menu
         // returns to either BookingMenu or MakeBooking depending on where SearchRooms was called
     }
 
-    public async Task<Customer?> GetCustomer(string email)
+    /*public async Task<Customer?> GetCustomer(string email)
     {
         //handles email input
         var isValid = await _query.ValidateEmail(email);
@@ -168,18 +166,18 @@ public class BookingMenu : Menu
             Console.WriteLine("Email not found.");
             return null;
         }
-    }
+    }*/
 
-   public async Task MakeBooking(Customer customer)
+   public async Task MakeBooking()
 {
     // Call the Login method to get the customer
-    customer = await _mainMenu.Login(); 
+   // _customer = await _mainMenu.Login(); 
 
-    if (customer is null)
+    /*if (_customer is null)
     {
         Console.WriteLine("Booking process aborted due to login failure.");
         return; // Exit the method if login fails
-    }
+    }*/
 
     if (_bookingPreferences is null)
     {
@@ -192,7 +190,8 @@ public class BookingMenu : Menu
         Console.WriteLine("+===================================+");
         Console.WriteLine("|        FINALIZE YOUR BOOKING      |");
         Console.WriteLine("+===================================+");
-
+        //Print Available Rooms based on preferences
+        await _query.ListAvailableRooms(_bookingPreferences);
         // Room id input
         Console.WriteLine("| Please enter the Room ID:         |");
         Console.WriteLine("+-----------------------------------+");
@@ -218,7 +217,7 @@ public class BookingMenu : Menu
         Console.WriteLine("| Booking your room, please wait... |");
         Console.WriteLine("+===================================+");
 
-        await _query.BookRoom(_bookingPreferences, customer.id, roomId, extraBed, dailyBreakfast);
+        await _query.BookRoom(_bookingPreferences, _customer.id, roomId, extraBed, dailyBreakfast);
 
         // confirmation
         Console.WriteLine("+===================================+");
@@ -230,9 +229,10 @@ public class BookingMenu : Menu
     }
 }
 
-    public async Task ModifyBooking(Customer customer)
+    public async Task ModifyBooking()
     {
         Console.Clear();
+        await _query.MyBookings(_customer.id); //prints the customers current bookings
         Console.WriteLine("+===================================+");
         Console.WriteLine("|          MODIFY BOOKING           |");
         Console.WriteLine("+===================================+");
@@ -245,7 +245,7 @@ public class BookingMenu : Menu
         
         // Extra_bed option
         Console.WriteLine("+-----------------------------------+");
-        Console.WriteLine("| Would you like an extra bed?      |");
+        Console.WriteLine("| Toggle extra bed                  |");
         Console.WriteLine("| (Additional $30 per night)        |");
         Console.WriteLine("| Enter true or false:              |");
         Console.WriteLine("+-----------------------------------+");
@@ -253,8 +253,8 @@ public class BookingMenu : Menu
 
         // Breakfast option
         Console.WriteLine("+-----------------------------------+");
-        Console.WriteLine("| Would you like to include         |");
-        Console.WriteLine("| daily breakfast? (true/false)     |");
+        Console.WriteLine("| Toggle daily breakfast            |");
+        Console.WriteLine("| (true/false)                      |");
         Console.WriteLine("+-----------------------------------+");
         bool dailyBreakfast = GetInputAsBool();
         
@@ -269,10 +269,10 @@ public class BookingMenu : Menu
         // returns to bookingMenu
     }
 
-    public async Task DeleteBooking(Customer customer)
+    public async Task DeleteBooking()
     {
-        // MyBooking method here?
         Console.Clear();
+        await _query.MyBookings(_customer.id);
         Console.WriteLine("+===================================+");
         Console.WriteLine("|         DELETE A BOOKING          |");
         Console.WriteLine("+===================================+");

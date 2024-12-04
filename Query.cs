@@ -461,9 +461,9 @@ public class Query
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
                 Console.Clear();
-                Console.WriteLine("+=============================================+");
-                Console.WriteLine("|                 YOUR BOOKINGS               |");
-                Console.WriteLine("+=============================================+");
+                Console.WriteLine("+===================================+");
+                Console.WriteLine("|           YOUR BOOKINGS           |");
+                Console.WriteLine("+===================================+\n");
                 // String formatting 
                 Console.WriteLine(
                     $"{"B.Id",-8}{"C.Id",-8}{"Customer",-20}{"Dates",-30}" +
