@@ -148,6 +148,7 @@ public class BookingMenu : Menu
             Preference = reviewOrPrice
         };
         await _query.ListAvailableRooms(_bookingPreferences);
+        // returns to either BookingMenu or MakeBooking depending on where SearchRooms was called
     }
 
     public async Task<Customer?> GetCustomer(string email)
@@ -177,7 +178,7 @@ public class BookingMenu : Menu
             await _customerMenu.RegisterCustomer(email);
             _customer = await _query.GetCustomer(email);
         }
-        else
+        if (_customer is not null)
         {
             if (_bookingPreferences is null)
             {
@@ -224,6 +225,7 @@ public class BookingMenu : Menu
                 Console.WriteLine("+===================================+");
                 Console.WriteLine("[Press any button to continue]");
                 Console.ReadLine(); // pause
+                // returns to BookingMenu
             }
         }
     }
@@ -260,5 +262,6 @@ public class BookingMenu : Menu
         Console.WriteLine("+===================================+");
         Console.WriteLine("[Press any button to continue]");
         Console.ReadLine();
+        // returns to BookingMenu
     }
 }

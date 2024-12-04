@@ -96,7 +96,7 @@ public abstract class Menu
                 return 4;
         }
 
-        Console.WriteLine("Thats not a room size (Single, Double, Triple, Quad)");
+        Console.WriteLine("That's not a room size (Single, Double, Triple, Quad)");
         return GetInputAsRoomSize();
     }
 }

@@ -35,7 +35,7 @@ public class MainMenu : Menu
         bool continueMenu = true;
         while (continueMenu) // this method sends the user to other functions or it exits the program
         // by having this loop we make sure that the program doesn't end until we tell it to
-        // we also make sure we get an valid answer befor continuing
+        // we also make sure we get a valid answer before continuing
         {
             var response = GetInputAsString();
 

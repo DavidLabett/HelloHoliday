@@ -427,7 +427,7 @@ public class Query
                 Console.WriteLine("+=============================================+");
                 Console.WriteLine("|                 YOUR BOOKINGS               |");
                 Console.WriteLine("+=============================================+");
-               // String formatting
+               // String formatting 
                 Console.WriteLine(
                     $"{"B.Id",-8}{"C.Id",-8}{"Customer",-20}{"Dates",-30}" +
                     $"{"Extra Bed",-12}{"Breakfast",-12}{"Price/Night",-15}" +

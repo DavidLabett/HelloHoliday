@@ -43,6 +43,7 @@ public class CustomerMenu : Menu
 
     private void PrintCustomerMenu()
     {
+        Console.Clear();
         Console.WriteLine("+=========================+");
         Console.WriteLine("|      CUSTOMER MENU      |");
         Console.WriteLine("+=========================+");
@@ -121,8 +122,7 @@ public class CustomerMenu : Menu
         Console.WriteLine("+===================================+");
         Console.WriteLine("[Press any button to continue]");
         Console.ReadLine();
-        PrintCustomerMenu();
-        await AskUser();
+        // returns to the menu that called the method. Either CustomerMenu or MakeBooking();
     }
 
     // Switch-case? User should also be able to modify email..
@@ -174,8 +174,7 @@ public class CustomerMenu : Menu
         Console.WriteLine("+===================================+");
         Console.WriteLine("[Press any button to continue]");
         Console.ReadLine(); //pause
-        PrintCustomerMenu();
-        await AskUser();
+        // The menu will automatically go back to customermenu
     }
 
     private async Task DeleteCustomer()
@@ -186,6 +185,7 @@ public class CustomerMenu : Menu
             Console.WriteLine("| Your account has successfully been deleted |");
             Console.WriteLine("[Press any button to continue]");
             Console.ReadLine();
+            //Goes back to mainmenu
         }
     }
 
