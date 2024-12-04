@@ -221,7 +221,7 @@ Console.WriteLine("+===================================+");
 
     public async Task DeleteBooking()
     {
-        // My booking metod här?
+        // MyBooking metod här?
         Console.Clear();
         Console.WriteLine("+===================================+");
         Console.WriteLine("|         DELETE A BOOKING          |");
