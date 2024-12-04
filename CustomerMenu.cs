@@ -3,41 +3,24 @@ namespace HelloHoliday;
 public class CustomerMenu : Menu
 {
     Query _query;
-    Customer? _customer;
+    MainMenu _mainMenu;
+    //Customer? _customer;
 
-    public CustomerMenu(Query query)
+    public CustomerMenu(Query query, MainMenu mainMenu)
     {
         _query = query;
+        _mainMenu = mainMenu;
     }
 
     public async Task Menu()
     {
-        Console.Write("| Please enter your email: ");
-        var email = GetInputAsString();
+        // Call the Login method to get the customer
+        var customer = await _mainMenu.Login(); // Use the Login method from MainMenu
 
-        //handles email input
-        var isValid = await _query.ValidateEmail(email);
-        if (isValid)
+        if (customer is not null)
         {
-            
-            _customer = await _query.GetCustomer(email);
-            Console.Clear();
-            if (_customer is not null)
-            {
-                Console.WriteLine($"Welcome back {_customer.firstname} {_customer.lastname}!");
-                PrintCustomerMenu();
-                await AskUser();
-            }
-        }
-        else
-        {
-            Console.WriteLine("+-----------------------------------+");
-            Console.WriteLine("| Email not found.                  |");
-            Console.WriteLine("| Let's get you registered!         |");
-            Console.WriteLine("+-----------------------------------+");
-            Console.WriteLine("[Press any button to continue]");
-            Console.ReadLine(); //pause
-            await RegisterCustomer(email);
+            PrintCustomerMenu();
+            await AskUser (customer);
         }
     }
 
@@ -55,7 +38,7 @@ public class CustomerMenu : Menu
         Console.WriteLine("| Select an option:       |");
     }
 
-    private async Task AskUser()
+    private async Task AskUser(Customer customer)
     {
         bool continueMenu = true;
         while (continueMenu) // so we get a valid answer before continuing
@@ -65,13 +48,13 @@ public class CustomerMenu : Menu
             switch (response)
             {
                 case "1":
-                    await MyBookings();
+                    await MyBookings(customer);
                     break;
                 case "2":
-                    await ModifyCustomer();
+                    await ModifyCustomer(customer);
                     break;
                 case "3":
-                    await DeleteCustomer();
+                    await DeleteCustomer(customer);
                     continueMenu = false; // when we no longer continue the menu we will return to main menu to complete the method we came from
                     break;
                 case "0":
@@ -115,7 +98,7 @@ public class CustomerMenu : Menu
 
         // Register the customer and fetch their details
         await _query.RegisterCustomer(firstName, lastName, email, phone, birthdate);
-        _customer = await _query.GetCustomer(email);
+        //_customer = await _query.GetCustomer(email);
 
         Console.WriteLine("+===================================+");
         Console.WriteLine("| Registration Successful!          |");
@@ -126,7 +109,7 @@ public class CustomerMenu : Menu
     }
 
     // Switch-case? User should also be able to modify email..
-    private async Task ModifyCustomer()
+    private async Task ModifyCustomer(Customer customer)
     {
         Console.Clear();
         Console.WriteLine("+===================================+");
@@ -134,13 +117,12 @@ public class CustomerMenu : Menu
         Console.WriteLine("+===================================+");
 
         // Display current details for reference
-        if (_customer is not null)
         {
             Console.WriteLine("| Current Details:");
-            Console.WriteLine($"| First Name:     {_customer.firstname}");
-            Console.WriteLine($"| Last Name:      {_customer.lastname}");
-            Console.WriteLine($"| Phone Number:   {_customer.phone}");
-            Console.WriteLine($"| Date of Birth:  {_customer.birth}");
+            Console.WriteLine($"| First Name:     {customer.firstname}");
+            Console.WriteLine($"| Last Name:      {customer.lastname}");
+            Console.WriteLine($"| Phone Number:   {customer.phone}");
+            Console.WriteLine($"| Date of Birth:  {customer.birth}");
             Console.WriteLine("+-----------------------------------+");
         }
 
@@ -164,10 +146,10 @@ public class CustomerMenu : Menu
         Console.WriteLine("+-----------------------------------+");
 
         // Update the customer's details
-        await _query.ModifyCustomer(firstName, lastName, _customer.email, phone, birthdate);
+        await _query.ModifyCustomer(firstName, lastName, customer.email, phone, birthdate);
 
         // Update the local customer object with new details
-        _customer = await _query.GetCustomer(_customer.email);
+        customer = await _query.GetCustomer(customer.email);
 
         Console.WriteLine("+===================================+");
         Console.WriteLine("| Details successfully updated!     |");
@@ -177,11 +159,11 @@ public class CustomerMenu : Menu
         // The menu will automatically go back to customermenu
     }
 
-    private async Task DeleteCustomer()
+    private async Task DeleteCustomer(Customer customer)
     {
-        if (_customer is not null)
+        if (customer is not null)
         {
-            await _query.DeleteCustomer(_customer.id);
+            await _query.DeleteCustomer(customer.id);
             Console.WriteLine("| Your account has successfully been deleted |");
             Console.WriteLine("[Press any button to continue]");
             Console.ReadLine();
@@ -189,11 +171,11 @@ public class CustomerMenu : Menu
         }
     }
 
-    private async Task MyBookings()
+    private async Task MyBookings(Customer customer)
     {
-        if (_customer is not null)
+        if (customer is not null)
         {
-            await _query.MyBookings(_customer.id);
+            await _query.MyBookings(customer.id);
         }
         Console.WriteLine("[Press any button to continue]");
         Console.ReadLine();

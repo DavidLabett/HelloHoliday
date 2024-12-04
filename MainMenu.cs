@@ -4,17 +4,20 @@ public class MainMenu : Menu
 {
     BookingMenu _bookingMenu;
     CustomerMenu _customerMenu;
-
-    public MainMenu(Query query)
+    Query _query;
+    Customer? _currentCustomer;
+    
+   public MainMenu(Query query)
     {
-        _customerMenu = new CustomerMenu(query);
-        _bookingMenu = new BookingMenu(query, _customerMenu);
+        _query = query; // Initialize the Query object
+        _customerMenu = new CustomerMenu(query, this);
+        _bookingMenu = new BookingMenu(query, _customerMenu, this);
     }
 
     public async Task Menu()
     {
         PrintMenu();
-        await AskUser();
+        await AskUser ();
     }
 
     public void PrintMenu()
@@ -25,17 +28,17 @@ public class MainMenu : Menu
         Console.WriteLine("+=========================+");
         Console.WriteLine("| 1. Customer Menu        |");
         Console.WriteLine("| 2. Booking Menu         |");
+        Console.WriteLine("| 3. Login Customer       |");
+        Console.WriteLine("| 4. Logout               |"); // Option to log out
         Console.WriteLine("| 0. Quit                 |");
         Console.WriteLine("+=========================+");
         Console.WriteLine("| Select an option:       |");
     }
 
-    public async Task AskUser()
+    public async Task AskUser ()
     {
         bool continueMenu = true;
-        while (continueMenu) // this method sends the user to other functions or it exits the program
-        // by having this loop we make sure that the program doesn't end until we tell it to
-        // we also make sure we get a valid answer before continuing
+        while (continueMenu)
         {
             var response = GetInputAsString();
 
@@ -49,7 +52,17 @@ public class MainMenu : Menu
                 case ("2"):
                 case ("booking"):
                 case ("b"):
-                    await _bookingMenu.Menu();
+                    await _bookingMenu.Menu(_currentCustomer);
+                    break;
+                case ("3"):
+                case ("login"):
+                case ("l"):
+                    await Login(); // Call the Login method
+                    break;
+                case ("4"):
+                case ("logout"):
+                case ("lo"):
+                    Logout(); // Call the Logout method
                     break;
                 case ("0"):
                 case ("quit"):
@@ -64,4 +77,56 @@ public class MainMenu : Menu
             }
         }
     }
+
+    public async Task<Customer> Login()
+    {
+        // Check if a customer is already logged in
+        if (_currentCustomer != null)
+        {
+            Console.WriteLine($"You are already logged in as {_currentCustomer.firstname} {_currentCustomer.lastname}.");
+            return _currentCustomer; // Return the already logged-in customer
+        }
+
+        Console.Write("| Please enter your email: ");
+        var email = GetInputAsString();
+
+        // Validate the email
+        var isValid = await _query.ValidateEmail(email);
+        if (isValid)
+        {
+            var customer = await _query.GetCustomer(email);
+            if (customer != null)
+            {
+                Console.Clear();
+                Console.WriteLine($"Welcome back {customer.firstname} {customer.lastname}!");
+                _currentCustomer = customer; // Store the logged-in customer
+                return customer; // Return the customer object
+            }
+        }
+        else
+        {
+            Console.WriteLine("+-----------------------------------+");
+            Console.WriteLine("| Email not found.                  |");
+            Console.WriteLine("| Let's get you registered!         |");
+            Console.WriteLine("+-----------------------------------+");
+            Console.WriteLine("[Press any button to continue]");
+            Console.ReadLine(); // pause
+            await _customerMenu.RegisterCustomer(email);
+        }
+        return null; // Return null if login fails
+    }
+
+    public void Logout()
+    {
+        if (_currentCustomer != null)
+        {
+            Console.WriteLine($"Goodbye, {_currentCustomer.firstname} {_currentCustomer.lastname}. You have been logged out.");
+            _currentCustomer = null; // Clear the logged-in customer
+        }
+        else
+        {
+            Console.WriteLine("No user is currently logged in.");
+        }
+    }
+    
 }

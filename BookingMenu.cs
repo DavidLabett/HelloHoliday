@@ -4,19 +4,20 @@ public class BookingMenu : Menu
 {
     Query _query;
     BookingPreferences? _bookingPreferences;
-    Customer? _customer;
     CustomerMenu _customerMenu;
+    MainMenu _mainMenu;
 
-    public BookingMenu(Query query, CustomerMenu customerMenu)
+    public BookingMenu(Query query, CustomerMenu customerMenu, MainMenu mainMenu)
     {
         _query = query;
         _customerMenu = customerMenu;
+        _mainMenu = mainMenu;
     }
 
-    public async Task Menu()
+    public async Task Menu(Customer customer)
     {
         PrintBookingMenu();
-        await AskUser();
+        await AskUser(customer);
     }
 
     public void PrintBookingMenu()
@@ -34,7 +35,7 @@ public class BookingMenu : Menu
         Console.WriteLine("| Select an option:         |");
     }
 
-    public async Task AskUser()
+    public async Task AskUser(Customer customer)
     {
         bool continueMenu = true;
         while (continueMenu) // so we get a valid answer before continuing
@@ -47,13 +48,13 @@ public class BookingMenu : Menu
                     await SearchRooms();
                     break;
                 case "2":
-                    await MakeBooking();
+                    await MakeBooking(customer);
                     break;
                 case "3":
-                    await ModifyBooking();
+                    await ModifyBooking(customer);
                     break;
                 case "4":
-                    await DeleteBooking();
+                    await DeleteBooking(customer);
                     break;
                 case "0":
                     continueMenu = false;
@@ -169,70 +170,67 @@ public class BookingMenu : Menu
         }
     }
 
-    public async Task MakeBooking()
+   public async Task MakeBooking(Customer customer)
+{
+    // Call the Login method to get the customer
+    customer = await _mainMenu.Login(); 
+
+    if (customer is null)
     {
-        Console.WriteLine("What's your Email?");
-        var email = GetInputAsString();
-        
-        _customer = await GetCustomer(email);
-        if (_customer is null)
-        {
-            await _customerMenu.RegisterCustomer(email);
-            _customer = await _query.GetCustomer(email);
-        }
-        if (_customer is not null)
-        {
-            if (_bookingPreferences is null)
-            {
-                await SearchRooms();
-            }
-            else
-            {
-                Console.Clear();
-                Console.WriteLine("+===================================+");
-                Console.WriteLine("|        FINALIZE YOUR BOOKING      |");
-                Console.WriteLine("+===================================+");
-
-                // Room id input
-                Console.WriteLine("| Please enter the Room ID:         |");
-                Console.WriteLine("+-----------------------------------+");
-                int roomId = GetInputAsInt();
-
-                // Extra_bed option
-                Console.WriteLine("+-----------------------------------+");
-                Console.WriteLine("| Would you like an extra bed?      |");
-                Console.WriteLine("| (Additional $30 per night)        |");
-                Console.WriteLine("| Enter true or false:              |");
-                Console.WriteLine("+-----------------------------------+");
-                bool extraBed = GetInputAsBool();
-
-                // Breakfast option
-                Console.WriteLine("+-----------------------------------+");
-                Console.WriteLine("| Would you like to include         |");
-                Console.WriteLine("| daily breakfast? (true/false)     |");
-                Console.WriteLine("+-----------------------------------+");
-                bool dailyBreakfast = GetInputAsBool();
-
-                // loading
-                Console.WriteLine("+-----------------------------------+");
-                Console.WriteLine("| Booking your room, please wait... |");
-                Console.WriteLine("+===================================+");
-
-                await _query.BookRoom(_bookingPreferences, _customer.id, roomId, extraBed, dailyBreakfast);
-
-                // confirmation
-                Console.WriteLine("+===================================+");
-                Console.WriteLine("| Your booking is confirmed!        |");
-                Console.WriteLine("| Thank you for choosing us.        |");
-                Console.WriteLine("+===================================+");
-                Console.WriteLine("[Press any button to continue]");
-                Console.ReadLine(); // pause
-                // returns to BookingMenu
-            }
-        }
+        Console.WriteLine("Booking process aborted due to login failure.");
+        return; // Exit the method if login fails
     }
 
-    public async Task ModifyBooking()
+    if (_bookingPreferences is null)
+    {
+        await SearchRooms();
+    }
+    else
+    {
+        // The rest of your booking logic remains unchanged
+        Console.Clear();
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("|        FINALIZE YOUR BOOKING      |");
+        Console.WriteLine("+===================================+");
+
+        // Room id input
+        Console.WriteLine("| Please enter the Room ID:         |");
+        Console.WriteLine("+-----------------------------------+");
+        int roomId = GetInputAsInt();
+
+        // Extra_bed option
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| Would you like an extra bed?      |");
+        Console.WriteLine("| (Additional $30 per night)        |");
+        Console.WriteLine("| Enter true or false:              |");
+        Console.WriteLine("+-----------------------------------+");
+        bool extraBed = GetInputAsBool();
+
+        // Breakfast option
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| Would you like to include         |");
+        Console.WriteLine("| daily breakfast? (true/false)     |");
+        Console.WriteLine("+-----------------------------------+");
+        bool dailyBreakfast = GetInputAsBool();
+
+        // loading
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| Booking your room, please wait... |");
+        Console.WriteLine("+===================================+");
+
+        await _query.BookRoom(_bookingPreferences, customer.id, roomId, extraBed, dailyBreakfast);
+
+        // confirmation
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("| Your booking is confirmed!        |");
+        Console.WriteLine("| Thank you for choosing us.        |");
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("[Press any button to continue]");
+        Console.ReadLine(); // pause
+    }
+}
+
+    public async Task ModifyBooking(Customer customer)
     {
         Console.Clear();
         Console.WriteLine("+===================================+");
@@ -271,7 +269,7 @@ public class BookingMenu : Menu
         // returns to bookingMenu
     }
 
-    public async Task DeleteBooking()
+    public async Task DeleteBooking(Customer customer)
     {
         // MyBooking method here?
         Console.Clear();
