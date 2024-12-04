@@ -50,7 +50,7 @@ public class BookingMenu : Menu
                     await MakeBooking();
                     break;
                 case "3":
-                    await EditBooking();
+                    await ModifyBooking();
                     break;
                 case "4":
                     await DeleteBooking();
@@ -230,9 +230,43 @@ public class BookingMenu : Menu
         }
     }
 
-    public async Task EditBooking()
+    public async Task ModifyBooking()
     {
+        Console.Clear();
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("|          MODIFY BOOKING           |");
+        Console.WriteLine("+===================================+");
         
+        Console.WriteLine("| Please enter your Booking ID:     |");
+        Console.WriteLine("+-----------------------------------+");
+        int bookingId = GetInputAsInt();
+
+        await _query.FindBooking(bookingId);
+        
+        // Extra_bed option
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| Would you like an extra bed?      |");
+        Console.WriteLine("| (Additional $30 per night)        |");
+        Console.WriteLine("| Enter true or false:              |");
+        Console.WriteLine("+-----------------------------------+");
+        bool extraBed = GetInputAsBool();
+
+        // Breakfast option
+        Console.WriteLine("+-----------------------------------+");
+        Console.WriteLine("| Would you like to include         |");
+        Console.WriteLine("| daily breakfast? (true/false)     |");
+        Console.WriteLine("+-----------------------------------+");
+        bool dailyBreakfast = GetInputAsBool();
+        
+        await _query.ModifyBooking(bookingId, extraBed, dailyBreakfast);
+        
+        // confirmation
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("| Your booking has been modified!   |");
+        Console.WriteLine("+===================================+");
+        Console.WriteLine("[Press any button to continue]");
+        Console.ReadLine(); // pause
+        // returns to bookingMenu
     }
 
     public async Task DeleteBooking()
