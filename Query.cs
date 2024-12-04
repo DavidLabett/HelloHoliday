@@ -473,20 +473,20 @@ public class Query
                 Console.WriteLine("+===================================+\n");
                 // String formatting 
                 Console.WriteLine(
-                    $"{"B.Id",-8}{"C.Id",-8}{"Customer",-20}{"Dates",-30}" +
-                    $"{"Extra Bed",-12}{"Breakfast",-12}{"Price/Night",-15}" +
+                    $"{"B.Id",-8}{"C.Id",-8}{"Customer",-20}{"Dates",-32}" +
+                    $"{"Hotel",-23}{"Extra Bed",-12}{"Breakfast",-13}{"Price/Night",-16}" +
                     $"{"Room Size",-15}{"City",-20}");
-                Console.WriteLine(new string('-', 130)); // calc ~line with comvined padding width
+                Console.WriteLine(new string('-', 157)); // calc ~line with comvined padding width
 
                 while (await reader.ReadAsync())
                 {
-                    // Print-rows
+                    // Print-rows 13
                     Console.WriteLine(
                         $"{reader.GetInt32(0),-8}{reader.GetInt32(1),-8}{reader.GetString(2),-20}" +
                         $"{reader.GetDateTime(3).ToString("yy-MM-dd")} to {reader.GetDateTime(4).ToString("yy-MM-dd"),-19}" +
-                        $"{reader.GetBoolean(5),-12}{reader.GetBoolean(6),-12}{reader.GetInt32(8),-15}" +
+                        $"{reader.GetString(13),-25}{reader.GetBoolean(5),-12}{reader.GetBoolean(6),-13}{reader.GetInt32(8),-16}" +
                         $"{reader.GetInt32(11),-14}{reader.GetString(15),-20}");
-                    Console.WriteLine(new string('-', 130)); // calc ~line with comvined padding width
+                    Console.WriteLine(new string('-', 157)); // calc ~line with comvined padding width
                 }
             }
         }
