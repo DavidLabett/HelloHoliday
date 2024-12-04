@@ -117,7 +117,8 @@ public class Query
         {
             //storing query
             var query =
-                "SELECT room_id, hotel_id, price, description, balcony, size, pool, entertainment, kidsclub, restaurant, beach_proximity, city_proximity, average_rating FROM room_master " +
+                "SELECT room_id, hotel_id, price, room_description, balcony, size, hotel_name, hotel_description, pool, entertainment, kidsclub, restaurant, beach_proximity, city_proximity, address, city, country, average_rating " +
+                "FROM room_master2 " +
                 "WHERE (beach_proximity <= $3)" +
                 "AND (city_proximity <= $4)" +
                 "AND (size = $5)";
@@ -145,8 +146,8 @@ public class Query
 
             // The EXCEPT part will exclude the result from the second select-statment and therefor exclude all unavalable rooms
             query += " EXCEPT " +
-                     "SELECT room_id, hotel_id, price, description, balcony, size, pool, entertainment, kidsclub, restaurant, beach_proximity, city_proximity, average_rating " +
-                     "FROM booking_master " +
+                     "SELECT room_id, hotel_id, price, room_description, balcony, size, hotel_name, hotel_description, pool, entertainment, kidsclub, restaurant, beach_proximity, city_proximity, address, city, country, average_rating " +
+                     "FROM booking_master2 " +
                      $"WHERE (booking_start_date, booking_end_date) overlaps (date '{preferences.CheckInDate.Date}', date '{preferences.CheckOutDate.Date}')";
             // The $1 is meant to be used instead of preferences.CheckInDate, this solution is a bad one because this way of doing it is not going to work in the future
             // This way is not going to be supported in the future therefor is it bad to teach it
@@ -183,52 +184,44 @@ public class Query
                 {
                     Console.WriteLine("Available Rooms:");
                     //Reader titles for each column, with string formatting, {String, padding}
+                    Console.WriteLine(new string('-', 155));
                     Console.WriteLine(
-                        $"{"Room ID",-10}{"Hotel ID",-10}{"Price",-10}{"Rating",-10}" +
-                        $"{"Description",-60}{"Amenities",-10}");
-                    //$"{"Pool",-10}{"Entertainment",-15}{"Kids Club",-15}{"Restaurant",-15}");
-                    // writes string with '-' count ~= 155 (all padding combined to match width)
-                    Console.WriteLine(new string('-', 155)); //Add country & city
+                        $"{"Room ID",-10}{"Price",-10}{"Description",-58}{"Hotel ID",-12}{"Hotel",-23}{"Amenities",-15}{"Rating",-12}{"City",-10}"
+                    );
+                    Console.WriteLine(new string('-', 155)); 
 
                     // Print table rows
                     while (await reader.ReadAsync())
                     {
-
                         string pool = " ";
                         string entertainment = " ";
                         string kidsclub = " ";
                         string restaurant = " ";
-                        if (reader.GetBoolean(6))
+                        if (reader.GetBoolean(8))
                         {
                             pool = "P";
                         }
 
-                        if (reader.GetBoolean(7))
+                        if (reader.GetBoolean(9))
                         {
                             entertainment = "E";
                         }
 
-                        if (reader.GetBoolean(8))
+                        if (reader.GetBoolean(10))
                         {
                             kidsclub = "K";
                         }
 
-                        if (reader.GetBoolean(9))
+                        if (reader.GetBoolean(11))
                         {
                             restaurant = "R";
                         }
 
                         // copy-paste the padding of reader titles:
                         Console.WriteLine(
-                            $"{reader.GetInt32(0),-10}{reader.GetInt32(1),-10}{reader.GetInt32(2),-10}{reader.GetFloat(12),-10}" +
-                            $"{reader.GetString(3),-60}{pool + entertainment + restaurant + kidsclub,-10}");
-                        //$"{reader.GetBoolean(6),-10}{reader.GetBoolean(7),-15}{reader.GetBoolean(8),-15}{reader.GetBoolean(9),-15}");
-
-
-                    }
-                    if (!reader.HasRows)
-                    {
-                        Console.WriteLine("No rooms available for your current preferences");
+                            $"{reader.GetInt32(0),-10}{reader.GetInt32(2),-10}{reader.GetString(3),-60}{reader.GetInt32(1),-10}{reader.GetString(6),-25}{pool + entertainment + restaurant + kidsclub,-15}{reader.GetFloat(17),-10}{reader.GetString(15),-10}"
+                        );
+                        Console.WriteLine(new string('-', 155));
                     }
                 }
             }
