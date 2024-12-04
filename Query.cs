@@ -151,10 +151,14 @@ public class Query
             }
 
             // The EXCEPT part will exclude the result from the second select-statment and therefor exclude all unavalable rooms
-            query += "EXCEPT " +
+            query += " EXCEPT " +
                      "SELECT room_id, hotel_id, price, description, balcony, size, pool, entertainment, kidsclub, restaurant, beach_proximity, city_proximity, average_rating " +
                      "FROM booking_master " +
-                     "WHERE (booking_start_date, booking_end_date) overlaps (date  $1, date  $2)";
+                     $"WHERE (booking_start_date, booking_end_date) overlaps (date '{preferences.CheckInDate.Date}', date '{preferences.CheckOutDate.Date}')";
+            // The $1 is meant to be used instead of preferences.CheckInDate, this solution is a bad one because this way of doing it is not going to work in the future
+            // This way is not going to be supported in the future therefor is it bad to teach it
+            // I don't see how to solve this in the correct way (using $1 and $2) 
+            
             //Adds an ORDER BY after all booleans are handled
             if (preferences.Preference.Contains("price"))
             {
