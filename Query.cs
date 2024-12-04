@@ -161,7 +161,7 @@ public class Query
             }
             else if (preferences.Preference.Contains("rating") || preferences.Preference.Contains("review"))
             {
-                query += " ORDER BY average_rating";
+                query += " ORDER BY average_rating DESC ";
             }
 
             //query is passed into _db.CreateCommand
@@ -249,7 +249,7 @@ public class Query
             }
             else if (preferences.Preference.Contains("rating") || preferences.Preference.Contains("review"))
             {
-                query += " ORDER BY average_rating"; 
+                query += " ORDER BY average_rating DESC "; 
             }
 
             //query is passed into _db.CreateCommand
@@ -305,7 +305,7 @@ public class Query
     // Finds the higest id value in the booking table and return the next expected id (id + 1)
     public async Task<int?> GetBookingId()
     {
-        await using (var cmd = _db.CreateCommand("select MAX(id) from booking limit 1"))
+        await using (var cmd = _db.CreateCommand("SELECT MAX(id) FROM booking LIMIT 1"))
         {
             await using (var reader = await cmd.ExecuteReaderAsync())
             {
@@ -366,8 +366,8 @@ public class Query
     {
         try
         {
-            var bookingxroomsQuery = "DELETE from booking_x_rooms where booking_id = $1";
-            var bookingQuery = "DELETE from booking where id = $1";
+            var bookingxroomsQuery = "DELETE FROM booking_x_rooms WHERE booking_id = $1";
+            var bookingQuery = "DELETE FROM booking WHERE id = $1";
 
             await using (var cmd = _db.CreateCommand(bookingxroomsQuery))
             {
