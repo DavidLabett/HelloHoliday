@@ -223,6 +223,10 @@ public class Query
                         );
                         Console.WriteLine(new string('-', 155));
                     }
+                    if (!reader.HasRows)
+                    {
+                        Console.WriteLine("There is no available rooms matching your preferences.");
+                    }
                 }
             }
         }
@@ -480,6 +484,11 @@ public class Query
                         $"{reader.GetString(13),-25}{reader.GetBoolean(5),-12}{reader.GetBoolean(6),-13}{reader.GetInt32(8),-16}" +
                         $"{reader.GetInt32(11),-14}{reader.GetString(15),-20}");
                     Console.WriteLine(new string('-', 157)); // calc ~line with comvined padding width
+                }
+
+                if (!reader.HasRows)
+                {
+                    Console.WriteLine("You don't have any bookings");
                 }
             }
         }
