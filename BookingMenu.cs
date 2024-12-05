@@ -184,7 +184,6 @@ public class BookingMenu : Menu
         // Extra_bed option
         Console.WriteLine("+-----------------------------------+");
         Console.WriteLine("| Would you like an extra bed?      |");
-        Console.WriteLine("| (Additional $30 per night)        |");
         Console.WriteLine("| Enter true or false:              |");
         Console.WriteLine("+-----------------------------------+");
         bool extraBed = GetInputAsBool();
@@ -230,7 +229,6 @@ public class BookingMenu : Menu
         // Extra_bed option
         Console.WriteLine("+-----------------------------------+");
         Console.WriteLine("| Toggle extra bed                  |");
-        Console.WriteLine("| (Additional $30 per night)        |");
         Console.WriteLine("| Enter true or false:              |");
         Console.WriteLine("+-----------------------------------+");
         bool extraBed = GetInputAsBool();
