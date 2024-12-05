@@ -6,9 +6,10 @@ public class CustomerMenu : Menu
     MainMenu _mainMenu;
     Customer _customer;
 
-    public CustomerMenu(Query query)
+    public CustomerMenu(Query query,MainMenu mainMenu)
     {
         _query = query;
+        _mainMenu = mainMenu;
     }
 
     public async Task Menu(Customer customer)
@@ -167,6 +168,7 @@ public class CustomerMenu : Menu
             await _query.DeleteCustomer(_customer.id);
             Console.WriteLine("| Your account has successfully been deleted |");
             Console.WriteLine("[Press any button to continue]");
+            _mainMenu.Logout();
             Console.ReadLine();
             //Goes back to mainmenu
     }

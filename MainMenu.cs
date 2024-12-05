@@ -12,7 +12,7 @@ public class MainMenu : Menu
    public MainMenu(Query query)
     {
         _query = query; // Initialize the Query object
-        _customerMenu = new CustomerMenu(query);
+        _customerMenu = new CustomerMenu(query, this);
         _bookingMenu = new BookingMenu(query);
     }
 
