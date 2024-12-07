@@ -412,7 +412,7 @@ public class Query
                 }
             }
         }
-    }
+    } // min ändring test
     
     public async Task ModifyBooking(int bookingId, bool extraBed, bool dailyBreakfast)
     {
